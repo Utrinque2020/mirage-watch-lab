@@ -1,6 +1,6 @@
 # Student Guide - Exercise MIRAGE WATCH
 
-**Author:** Ray
+**Author:** Utrinque2020
 **EXERCISE ONLY.** The cell, the place and all people are invented.
 
 This lab is a practice exercise. You are a **duty analyst** in an
@@ -8,7 +8,7 @@ intelligence cell. You will see how a hidden order can trick an AI
 assistant, and how shields can stop it. You will also see how this is
 like **social engineering** (tricking a person).
 
-Everything here is fake. Nothing is sent on a network. No real email
+Everything here is for exercise only-not real. Nothing is sent on a network. No real email
 leaves this computer.
 
 The words in this guide are kept short and clear.
