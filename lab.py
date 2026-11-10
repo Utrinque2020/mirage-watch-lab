@@ -632,6 +632,14 @@ WATCH_START_MINUTES = 7 * 60  # the shift starts at 0700 (exercise time)
 WATCH_STEP_MINUTES = 15       # each mission is about 15 minutes later
 
 
+def _short_path(path: Path) -> str:
+    """Show a lab file as a short relative path (for example logs/scoreboard.txt)."""
+    try:
+        return Path(path).resolve().relative_to(LAB_ROOT.resolve()).as_posix()
+    except ValueError:
+        return str(path)
+
+
 def watch_clock(number: int) -> str:
     """Exercise time for a mission, e.g. 1 -> '0700', 14 -> '1015'."""
     minutes = WATCH_START_MINUTES + WATCH_STEP_MINUTES * max(0, int(number) - 1)
@@ -1059,7 +1067,7 @@ def _award_mission(number: int, agent: str, pal: Palette) -> None:
         [
             "Mission complete!",
             "+{0} points. Badge earned: {1}".format(info.points, info.badge),
-            "Scoreboard file: " + str(SCOREBOARD_PATH),
+            "Scoreboard file: " + _short_path(SCOREBOARD_PATH),
         ],
         pal,
     ))
@@ -1081,7 +1089,7 @@ def run_quiz(agent: str, pal: Palette) -> int:
         ],
         pal,
     ))
-    safe_print("  Your teacher has the full answer sheet.")
+    safe_print(active().quiz_sheet_line)
     safe_print("")
     correct = 0
     for question in questions:
@@ -1099,7 +1107,7 @@ def run_quiz(agent: str, pal: Palette) -> int:
             correct += 1
             safe_print(pal.green + "    Yes. That is right." + pal.reset)
         else:
-            safe_print(pal.yellow + "    Not quite. Ask your teacher, or check TEACHER_QUIZ_ANSWERS.md." + pal.reset)
+            safe_print(pal.yellow + active().quiz_wrong_line + pal.reset)
         safe_print("")
     points = correct * QUIZ_POINTS_EACH
     badge = active().quiz_badge if correct == len(questions) else None
@@ -1176,7 +1184,7 @@ def run_challenge(args: argparse.Namespace, agent: str, pal: Palette, pause: boo
         [
             "Challenge complete!",
             "+{0} points. Badge earned: {1}".format(CHALLENGE_POINTS, active().challenge_badge),
-            "Talk with your teacher: did the shields stop your idea?",
+            active().challenge_talk,
         ],
         pal,
     ))
@@ -1246,14 +1254,14 @@ def list_stages() -> None:
     safe_print("  python lab.py --scoreboard")
     safe_print("  python generate_hidden_image.py --reveal")
     safe_print("")
-    safe_print("Students: read STUDENT_GUIDE.md")
-    safe_print("Teachers: read TEACHER_GUIDE.md")
+    for line in active().guide_lines:
+        safe_print(line)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Classroom lab: watch hidden orders and social engineering tricks, "
+            "Offline training lab: watch hidden orders and social engineering tricks, "
             "then turn on shields one by one. No API key needed. "
             "Default theme is unit (SARAB intel cell, assistant SAQR). EXERCISE ONLY. "
             "Use --theme school for Buddy."

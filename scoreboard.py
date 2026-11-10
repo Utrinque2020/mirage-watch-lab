@@ -161,8 +161,9 @@ def _now() -> str:
 
 def reset_scoreboard() -> None:
     SCOREBOARD_PATH.parent.mkdir(parents=True, exist_ok=True)
+    from themes import active  # late import: themes imports this module
     SCOREBOARD_PATH.write_text(
-        "AI Security Lab - scoreboard (this file is only for the classroom)\n"
+        active().scoreboard_header + "\n"
         "================================================================\n",
         encoding="utf-8",
     )

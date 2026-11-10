@@ -3,7 +3,7 @@
 **Author:** Ray  
 **For:** Ray and his students. Simple English. EXERCISE ONLY: everything is fake and offline.
 
-We ran **171** tests: **171** passed, **0** failed.
+We ran **176** tests: **176** passed, **0** failed.
 
 - This list has **every command** for the Exercise MIRAGE WATCH lab. We ran each one and wrote down the real result.
 - Story (unit theme): you are a duty analyst in the **SARAB Joint Cyber Fusion Cell** (invented). Your AI analyst assistant is **SAQR** (Arabic for “falcon”). The **red cell** hides orders in reports, pictures and memos.
@@ -480,12 +480,14 @@ python generate_hidden_image.py --help
 - **New extras (unit theme only):** watch clock (0700 + 15 minutes per mission, exercise time), INCOMING traffic line, SPOT REPORT box, live THREAT BOARD after each mission, AAR box at the end of each run. Print only: no waits, no real clock, honour --no-color and NO_COLOR.
 - **New quiz (unit theme):** 10 intel-cell questions. Key: bcbbababab. Q10 is the OWASP 2026 number question.
 - **New aliases:** --theme intel, cell, sarab (= unit); --doc osint (= comment), flash (= memo).
+- **Intel-cell words everywhere (unit theme):** the notes are now “restricted exercise watch notes” (tool text, the notes header, the fake email body), the address lock allows duty-desk@ and watch-officer@example.edu, and the quiz, challenge, SPOT REPORT and scoreboard lines name the Watch Officer. The school theme keeps its own words. Secret values, results and points are the same.
+- **Short paths:** the lab prints “Scoreboard file: logs/scoreboard.txt” (no long folder path).
 - **Old version kept:** the first “recruit” story is on the GitHub branch v1-recruit.
 - **Still true (good talking points):** Mission 5 (NO) stops the email, but the fake token still shows in SAQR's answer; Mission 10 stops the web visit, but the keys still show in the answer. There is still no y/n keyboard question for “ask a person”: --approve is the only YES.
 
 ## Test log: every command we ran
 
-Run on 10 November 2026 (Asia/Qatar, UTC+3) with Python 3.13, plus Python 3.8 and 3.9 runs, in a copy of the lab. 171 tests, 171 passed.
+Run on 10 November 2026 (Asia/Qatar, UTC+3) with Python 3.13, plus Python 3.8 and 3.9 runs, in a copy of the lab. 176 tests, 176 passed.
 
 | ID | Command | Result | Points | Pass |
 | --- | --- | --- | --- | --- |
@@ -634,6 +636,11 @@ Run on 10 November 2026 (Asia/Qatar, UTC+3) with Python 3.13, plus Python 3.8 an
 | XE15 | `python lab.py --theme school --stage 14 --no-pause   (school theme: no extras)` | no extras in school theme | +15 | PASS |
 | XE16 | `python lab.py --theme school --stage 1 --no-pause   (school page unchanged: DNS article)` | school page unchanged | +10 | PASS |
 | XE17 | `python lab.py --challenge --no-pause   (challenge in unit theme)` | challenge: LEAKED / BLOCKED | +15 | PASS |
+| XE18 | `unit theme output (every mission, boss shields, quiz, challenge, list, scoreboard): no classroom/teacher/school/Hadi/Recruit/student words` | no leftover words found |  | PASS |
+| XE19 | `python lab.py --stage 1 --no-pause   (notes, tool and email body in intel-cell words)` | intel-cell notes, tool, email words; SAFE / LEAKED | +10 | PASS |
+| XE20 | `python lab.py --stage 13 --shields address --no-pause   (cell address lock words)` | cell address lock words; PARTLY / LEAKED | +5 | PASS |
+| XE21 | `python lab.py --theme school --stage 1 --no-pause   (school keeps its own notes and tool words)` | school words kept; SAFE / LEAKED | +10 | PASS |
+| XE22 | `python lab.py --theme school --stage 13 --shields address --no-pause   (school address lock words)` | school address lock words; PARTLY / LEAKED | +5 | PASS |
 | V1 | `python3.8 lab.py --list` | 14 missions listed |  | PASS |
 | V4 | `python3.8 lab.py --all` | all 18 parts as A1; 165 points | +165 | PASS |
 | V5 | `python3.8 lab.py --quiz` | 10 out of 10 | +20 | PASS |
