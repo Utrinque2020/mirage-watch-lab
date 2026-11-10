@@ -151,8 +151,6 @@ def rank_for(points: int) -> tuple[str, str | None, int | None]:
 
 CHALLENGE_POINTS = 15
 CHALLENGE_BADGE = "Inventor"
-QUIZ_POINTS_EACH = 2
-QUIZ_BADGE = "Quiz Ace"
 
 
 def _now() -> str:

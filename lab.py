@@ -12,7 +12,6 @@ This file only needs the Python 3.8+ standard library.
     python lab.py --stage 1
     python lab.py --all --no-pause
     python lab.py --stage 14
-    python lab.py --quiz
     python lab.py --challenge
 """
 
@@ -35,13 +34,10 @@ from compat import (
 )
 from defenses import DefenseConfig, detect_instruction_like
 from models import get_model
-from quiz import QUESTIONS
 from scoreboard import (
     CHALLENGE_BADGE,
     CHALLENGE_POINTS,
     MISSIONS,
-    QUIZ_BADGE,
-    QUIZ_POINTS_EACH,
     SCOREBOARD_PATH,
     award,
     badges_earned,
@@ -1077,51 +1073,8 @@ def _award_mission(number: int, agent: str, pal: Palette) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Quiz, challenge, scoreboard view
+# Challenge, scoreboard view
 # ---------------------------------------------------------------------------
-
-def run_quiz(agent: str, pal: Palette) -> int:
-    # A keyboard is nice, but piped answers (for teachers and tests) also work.
-    questions = list(active().quiz)
-    safe_print(_box(
-        [
-            active().quiz_box_title,
-            str(len(questions)) + " short questions. Pick a, b, or c.",
-        ],
-        pal,
-    ))
-    safe_print(active().quiz_sheet_line)
-    safe_print("")
-    correct = 0
-    for question in questions:
-        safe_print(pal.bold + "Q{0}. {1}".format(question.number, question.text) + pal.reset)
-        for letter, choice in question.choices.items():
-            safe_print("    " + letter + ") " + choice)
-        try:
-            reply = input("    Your answer: ").strip().lower()
-        except EOFError:
-            reply = ""
-        if reply not in question.choices:
-            # allow "a)" or "A."
-            reply = reply[:1]
-        if reply == question.answer:
-            correct += 1
-            safe_print(pal.green + "    Yes. That is right." + pal.reset)
-        else:
-            safe_print(pal.yellow + active().quiz_wrong_line + pal.reset)
-        safe_print("")
-    points = correct * QUIZ_POINTS_EACH
-    badge = active().quiz_badge if correct == len(questions) else None
-    award(agent, "quiz", "Quiz {0}/{1}".format(correct, len(questions)), points, badge)
-    lines = [
-        "Quiz result: {0} out of {1} right.".format(correct, len(questions)),
-        "+{0} points.".format(points),
-    ]
-    if badge:
-        lines.append("Badge earned: " + badge + " (a perfect score!)")
-    safe_print(_box(lines, pal))
-    return 0
-
 
 def run_challenge(args: argparse.Namespace, agent: str, pal: Palette, pause: bool) -> int:
     from pathlib import Path
@@ -1251,7 +1204,6 @@ def list_stages() -> None:
     safe_print("  python lab.py --stage 5 --approve")
     safe_print("  python lab.py --stage 13")
     safe_print("  python lab.py --stage 14")
-    safe_print("  python lab.py --quiz")
     safe_print("  python lab.py --challenge")
     safe_print("  python lab.py --scoreboard")
     safe_print("  python generate_hidden_image.py --reveal")
@@ -1281,7 +1233,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--stage", type=int, metavar="N", help="Run one mission. See --list.")
     parser.add_argument("--all", action="store_true", dest="run_all", help="Run every mission in this theme, in order. It does not wait for Enter (add --pause to wait).")
     parser.add_argument("--list", action="store_true", dest="list_only", help="Show the mission list and exit.")
-    parser.add_argument("--quiz", action="store_true", help="Run the short end-of-lab quiz.")
     parser.add_argument("--challenge", action="store_true", help="Test your own hidden-word picture.")
     parser.add_argument("--scoreboard", action="store_true", dest="show_board", help="Show the scoreboard and exit.")
     parser.add_argument("--reset-score", action="store_true", dest="reset_score", help="Clear the scoreboard file.")
@@ -1393,30 +1344,23 @@ def main(argv: list[str] | None = None) -> int:
     if args.reset_score:
         reset_scoreboard()
         safe_print("The scoreboard is empty now.")
-        if not (args.list_only or args.show_board or args.quiz or args.challenge or args.stage or args.run_all):
+        if not (args.list_only or args.show_board or args.challenge or args.stage or args.run_all):
             return 0
 
     if args.list_only or (
         args.stage is None
         and not args.run_all
-        and not args.quiz
         and not args.challenge
         and not args.show_board
     ):
         list_stages()
-        if args.stage is None and not args.run_all and not args.list_only and not args.quiz and not args.challenge and not args.show_board:
-            safe_print("Tip: pass --stage N, --all --no-pause, --quiz, or --challenge.")
+        if args.stage is None and not args.run_all and not args.list_only and not args.challenge and not args.show_board:
+            safe_print("Tip: pass --stage N, --all --no-pause, or --challenge.")
         return 0
 
-    if args.show_board and not (args.quiz or args.challenge or args.stage or args.run_all):
+    if args.show_board and not (args.challenge or args.stage or args.run_all):
         show_scoreboard(pal)
         return 0
-
-    if args.quiz and not (args.stage or args.run_all or args.challenge):
-        _banner_main(pal)
-        code = run_quiz(agent, pal)
-        show_scoreboard(pal)
-        return code
 
     if args.challenge and not (args.stage or args.run_all):
         _banner_main(pal)
@@ -1473,8 +1417,6 @@ def main(argv: list[str] | None = None) -> int:
         safe_print("Stopped. You can run the same command again.")
         return 130
 
-    if args.quiz:
-        run_quiz(agent, pal)
     if args.challenge:
         run_challenge(args, agent, pal, pause)
 
