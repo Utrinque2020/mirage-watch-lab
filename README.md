@@ -1,4 +1,4 @@
-# Exercise MIRAGE WATCH — AI intel cell lab
+# Exercise MIRAGE WATCH — AI intelligence cell lab
 
 > **Author:** Utrinque2020. An offline teaching lab about **indirect prompt injection**
 > and **social engineering**, from a defensive point of view.
