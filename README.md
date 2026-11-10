@@ -4,7 +4,7 @@
 > and **social engineering**, from a defensive point of view.
 > **EXERCISE ONLY.** Everything here is fictional.
 
-For Year 3 military cyber intelligence students. The English is kept simple
+For cyber intelligence students. English is kept simple
 (about IELTS band 4).
 
 The default story is the **SARAB Joint Cyber Fusion Cell**, an invented
