@@ -3,7 +3,7 @@
 
 Two story packs share the same shields and fake tools:
 
-    python lab.py --theme unit     (default: Mirage Watch / Hadi)
+    python lab.py --theme unit     (default: SARAB intel cell / SAQR)
     python lab.py --theme school   (Buddy the practice robot)
 
 This file only needs the Python 3.8+ standard library.
@@ -32,7 +32,7 @@ from compat import (
     safe_print,
     wait_for_enter,
 )
-from defenses import DefenseConfig
+from defenses import DefenseConfig, detect_instruction_like
 from models import get_model
 from quiz import QUESTIONS
 from scoreboard import (
@@ -394,7 +394,7 @@ def stage_14(args: argparse.Namespace) -> list[LabRun]:
         defenses=DefenseConfig(),
         model=model,
         auto_confirm=args.approve,
-        user_request="Please write a short summary of this memo.",
+        user_request=active().memo_request,
     )
     defended = run_assistant(
         stage=14,
@@ -404,7 +404,7 @@ def stage_14(args: argparse.Namespace) -> list[LabRun]:
         defenses=DefenseConfig(filter_input=True, human_in_the_loop=True),
         model=model,
         auto_confirm=args.approve,
-        user_request="Please write a short summary of this memo.",
+        user_request=active().memo_request,
     )
     return _attach_trap([attack, defended], {0: trap("14")})
 
@@ -504,14 +504,14 @@ def _mission_banner(number: int, pal: Palette) -> None:
         )
     else:
         heading = "MISSION {0} (extra) - {1}".format(info.number, info.title)
-    safe_print(_box(
-        [
-            heading,
-            "Goal: " + info.goal,
-            "Reward: {0} points and the {1} badge".format(info.points, info.badge),
-        ],
-        pal,
-    ))
+    lines = [
+        heading,
+        "Goal: " + info.goal,
+        "Reward: {0} points and the {1} badge".format(info.points, info.badge),
+    ]
+    if theme.show_extras:
+        lines = [theme.banner_tag, "WATCH LOG " + watch_clock(number) + " (exercise time)"] + lines
+    safe_print(_box(lines, pal))
     safe_print("")
     _print_pairing(number, pal)
 
@@ -572,14 +572,29 @@ def _print_report(run: LabRun, pal: Palette) -> None:
     found = _incident_lines(run)
     if not found:
         return
-    box = [
-        "REPORT IT",
-        "A shield caught something. This is a practice report only.",
-        "What happened: " + " ".join(found),
-        "Who to tell: Your training officer (in class, your teacher).",
-        "Do not: Send the text or the roster on. Do not try the same action yourself.",
-        "Next: Write what you saw. Keep the sample file in this lab.",
-    ]
+    if theme.show_extras:
+        box = [
+            theme.report_title,
+            "A shield caught something. This is a practice report only.",
+            "What: " + " ".join(found),
+        ]
+        if run.stage:
+            box.append("When: WATCH LOG " + watch_clock(run.stage) + " (exercise time)")
+        box += [
+            "Source: " + str(run.source) + " (outside content, NOT trusted)",
+            "Action taken: the shield stopped it. Nothing was sent on.",
+            theme.report_who,
+            "Do not: Send the text or the roster on. Do not try the same action yourself.",
+        ]
+    else:
+        box = [
+            theme.report_title,
+            "A shield caught something. This is a practice report only.",
+            "What happened: " + " ".join(found),
+            theme.report_who,
+            "Do not: Send the text or the roster on. Do not try the same action yourself.",
+            "Next: Write what you saw. Keep the sample file in this lab.",
+        ]
     safe_print(_box(box, pal))
     safe_print("")
 
@@ -591,9 +606,11 @@ def _print_rank(pal: Palette) -> None:
     lines = ["Rank now: " + current]
     if nxt and need is not None:
         lines.append("Next rank: " + nxt + " (after " + str(need) + " more point(s)).")
-        lines.append("Ranks go from Recruit to Shield Commander.")
+        if active().rank_range_line:
+            lines.append(active().rank_range_line)
     else:
-        lines.append("This is the top training rank in this lab: Shield Commander.")
+        if active().top_rank_line:
+            lines.append(active().top_rank_line)
     safe_print(_box(lines, pal))
     safe_print("")
 
@@ -602,6 +619,185 @@ def _spot_the_trap(text: str, pal: Palette, pause: bool) -> None:
     lines = ["SPOT THE TRAP"] + text.split("\n")
     safe_print(_box(lines, pal))
     wait_for_enter(pause, "What do you think? Press Enter to find out.")
+    safe_print("")
+
+
+# ---------------------------------------------------------------------------
+# Intel-cell extras: watch clock, INCOMING line, live threat board, AAR box.
+# Print-only. They use no clock, no sleep and no network, so --no-pause runs
+# stay fast and every run prints the same words (good for tests and slides).
+# ---------------------------------------------------------------------------
+
+WATCH_START_MINUTES = 7 * 60  # the shift starts at 0700 (exercise time)
+WATCH_STEP_MINUTES = 15       # each mission is about 15 minutes later
+
+
+def watch_clock(number: int) -> str:
+    """Exercise time for a mission, e.g. 1 -> '0700', 14 -> '1015'."""
+    minutes = WATCH_START_MINUTES + WATCH_STEP_MINUTES * max(0, int(number) - 1)
+    minutes %= 24 * 60
+    return "{0:02d}{1:02d}".format(minutes // 60, minutes % 60)
+
+
+def _user_word() -> str:
+    return "analyst" if active().show_extras else "user"
+
+
+def _incoming_text(run: LabRun) -> str:
+    pack = active().incoming
+    if getattr(run, "scenario", "summarise") == "vision":
+        key = "card"
+    elif "urgent_memo" in str(run.source) or "flash_memo" in str(run.source):
+        key = "memo"
+    else:
+        key = "page"
+    text = pack.get(key, "")
+    return text.format(n=run.stage or 0)
+
+
+def _print_incoming(run: LabRun, pal: Palette) -> None:
+    if not active().show_extras:
+        return
+    text = _incoming_text(run)
+    if text:
+        safe_print(pal.yellow + pal.bold + ">> INCOMING: " + text + pal.reset)
+        safe_print("")
+
+
+def result_word(run: LabRun) -> str:
+    """SAFE, BLOCKED, PARTLY or LEAKED for one part (same words as COMMANDS.md)."""
+    if getattr(run, "scenario", "summarise") == "vision":
+        read_events = [e for e in run.tool_events if e.call.name == "read_file"]
+        if any(e.result.blocked_by for e in read_events):
+            return "BLOCKED"
+        if _keys_fetched(run):
+            return "LEAKED"
+        visit_blocked = any("BLOCKED" in e for e in (run.renderer_events or []))
+        if visit_blocked and _keys_leaked_in_text(run):
+            return "PARTLY"
+        if _keys_leaked_in_text(run):
+            return "LEAKED"
+        if not read_events and not (run.ocr_text or "").strip():
+            return "SAFE"
+        return "BLOCKED"
+    if run.filter_block is not None:
+        return "BLOCKED"
+    if _email_leaked(run):
+        return "LEAKED"
+    trap_present = bool(detect_instruction_like(run.raw_document or ""))
+    if not trap_present:
+        return "SAFE"
+    if _keys_leaked_in_text(run):
+        return "PARTLY"
+    return "BLOCKED"
+
+
+class Shift:
+    """Counts for one run of the lab (this terminal session only)."""
+
+    def __init__(self, start_points: int) -> None:
+        self.start_points = start_points
+        self.counts = {"SAFE": 0, "BLOCKED": 0, "PARTLY": 0, "LEAKED": 0}
+        self.missions = 0
+
+    @property
+    def traps(self) -> int:
+        return self.counts["BLOCKED"] + self.counts["PARTLY"] + self.counts["LEAKED"]
+
+
+def new_shift(start_points: int) -> Shift:
+    return Shift(start_points)
+
+
+def _colour_word(word: str, pal: Palette) -> str:
+    colour = {"SAFE": pal.green, "BLOCKED": pal.green, "PARTLY": pal.yellow, "LEAKED": pal.red}.get(word, "")
+    return colour + word + (pal.reset + pal.bold if colour else "")
+
+
+def _print_threat_board(number: int, runs: "list[LabRun]", shift: Shift, pal: Palette) -> None:
+    if not active().show_extras:
+        return
+    words = [result_word(run) for run in runs]
+    for word in words:
+        shift.counts[word] += 1
+    shift.missions += 1
+    def shown(word: str) -> str:
+        return _colour_word(word, pal) + (" (fake)" if word == "LEAKED" else "")
+
+    if len(words) == 1:
+        this = shown(words[0])
+    else:
+        this = " | ".join(
+            "part " + chr(ord("A") + i) + " " + shown(w) for i, w in enumerate(words)
+        )
+    c = shift.counts
+    lines = [
+        "THREAT BOARD (live)  -  WATCH LOG " + watch_clock(number),
+        "Mission " + str(number) + ": " + this,
+        "Shift so far: traps {0} | BLOCKED {1} | PARTLY {2} | LEAKED {3} (fake)".format(
+            shift.traps, c["BLOCKED"], c["PARTLY"], c["LEAKED"]
+        ),
+    ]
+    safe_print(_threat_box(lines, pal))
+    safe_print("")
+
+
+def _threat_box(lines: "list[str]", pal: Palette) -> str:
+    """Like _box, but keeps colour codes inside a line (they have no width)."""
+    import re as _re
+
+    inner = WIDTH - 2
+    strip = _re.compile(r"\x1b\[[0-9;]*m")
+    out = ["+" + "-" * inner + "+"]
+    for line in lines:
+        visible = len(strip.sub("", line))
+        if visible > inner - 2:
+            for wrapped in _wrap(strip.sub("", line), inner - 2):
+                out.append("| " + wrapped.ljust(inner - 2) + " |")
+            continue
+        out.append("| " + line + " " * (inner - 2 - visible) + " |")
+    out.append("+" + "-" * inner + "+")
+    return pal.bold + "\n".join(out) + pal.reset
+
+
+def _print_aar(shift: Shift, numbers: "list[int]", pal: Palette) -> None:
+    theme = active()
+    if not theme.show_extras or not shift.missions:
+        return
+    c = shift.counts
+    gained = total_points() - shift.start_points
+    current, _, _ = rank_for(total_points())
+    if c["LEAKED"] or c["PARTLY"]:
+        why = (
+            "Some traps got through, or partly through. Those parts had no shield, "
+            "or only one shield. One shield can fail."
+        )
+    elif shift.traps:
+        why = "Your shields worked together. This is defence in depth."
+    else:
+        why = "There were no traps in this run. The reports were safe."
+    if shift.traps:
+        next_time = (
+            "Keep more than one shield on. Check orders on a known channel. "
+            "Make a SPOT REPORT."
+        )
+    else:
+        next_time = "Keep your shields on. The next report may hide an order."
+    if len(numbers) == 1:
+        what_plan = "Mission " + str(numbers[0]) + ": keep SAQR safe while it helps the watch."
+    else:
+        what_plan = "Missions {0}-{1}: keep SAQR safe for the whole shift.".format(numbers[0], numbers[-1])
+    lines = [
+        "AFTER-ACTION REVIEW (AAR)  -  EXERCISE ONLY",
+        "1. What was planned? " + what_plan,
+        "2. What happened? Traps {0}. BLOCKED {1}. PARTLY {2}. LEAKED {3} (fake only). SAFE {4}.".format(
+            shift.traps, c["BLOCKED"], c["PARTLY"], c["LEAKED"], c["SAFE"]
+        ),
+        "3. Why? " + why,
+        "4. Next time? " + next_time,
+        "Score: +{0} points this run. Total {1}. Rank: {2}.".format(gained, total_points(), current),
+    ]
+    safe_print(_box(lines, pal))
     safe_print("")
 
 
@@ -622,11 +818,12 @@ def print_run(run: LabRun, pal: Palette, pause: bool) -> None:
     safe_print("")
     wait_for_enter(pause, "Press Enter to start this part.")
 
-    safe_print(_step("1", "What the user asked (this is the safe request)", pal))
+    safe_print(_step("1", "What the " + _user_word() + " asked (this is the safe request)", pal))
     safe_print(_indent(run.user_request))
     safe_print("")
     wait_for_enter(pause)
 
+    _print_incoming(run, pal)
     safe_print(_step("2", "What " + _who() + " fetched (this text comes from outside)", pal))
     safe_print(_indent("Source: " + run.source + "  (a local file, no network)"))
     safe_print(_indent("--- begin file ---"))
@@ -692,12 +889,13 @@ def print_vision_run(run: LabRun, pal: Palette, pause: bool) -> None:
     safe_print("")
     wait_for_enter(pause, "Press Enter to start this part.")
 
-    safe_print(_step("1", "What the user asked (this is the safe request)", pal))
+    safe_print(_step("1", "What the " + _user_word() + " asked (this is the safe request)", pal))
     safe_print(_indent(run.user_request))
     safe_print(_indent("Attached picture: " + str(run.image_path)))
     safe_print("")
     wait_for_enter(pause)
 
+    _print_incoming(run, pal)
     safe_print(_step("2", "What a person sees (the almost-white card)", pal))
     safe_print(_indent(run.raw_document))
     safe_print(_indent(run.human_view_note))
@@ -746,12 +944,12 @@ def print_vision_run(run: LabRun, pal: Palette, pause: bool) -> None:
     safe_print(_step("6", "What happened (every tool and 'web visit' is fake)", pal))
     _print_impact(run, pal)
     safe_print("")
-    safe_print(_indent(pal.bold + "Fake chat window:" + pal.reset))
+    safe_print(_indent(pal.bold + "Fake " + active().board_name + ":" + pal.reset))
     if run.renderer_events:
         for event in run.renderer_events:
             safe_print(_indent(event))
     else:
-        safe_print(_indent("(the chat window did not run)"))
+        safe_print(_indent("(the " + active().board_name + " did not run)"))
     safe_print("")
     safe_print(pal.bold + "What this means:" + pal.reset)
     safe_print(_indent(run.takeaway))
@@ -904,7 +1102,7 @@ def run_quiz(agent: str, pal: Palette) -> int:
             safe_print(pal.yellow + "    Not quite. Ask your teacher, or check TEACHER_QUIZ_ANSWERS.md." + pal.reset)
         safe_print("")
     points = correct * QUIZ_POINTS_EACH
-    badge = QUIZ_BADGE if correct == len(questions) else None
+    badge = active().quiz_badge if correct == len(questions) else None
     award(agent, "quiz", "Quiz {0}/{1}".format(correct, len(questions)), points, badge)
     lines = [
         "Quiz result: {0} out of {1} right.".format(correct, len(questions)),
@@ -973,11 +1171,11 @@ def run_challenge(args: argparse.Namespace, agent: str, pal: Palette, pause: boo
     )
     print_vision_run(defended, pal, pause)
 
-    award(agent, "challenge", "Hidden-picture challenge", CHALLENGE_POINTS, CHALLENGE_BADGE)
+    award(agent, "challenge", "Hidden-picture challenge", CHALLENGE_POINTS, active().challenge_badge)
     safe_print(_box(
         [
             "Challenge complete!",
-            "+{0} points. Badge earned: {1}".format(CHALLENGE_POINTS, CHALLENGE_BADGE),
+            "+{0} points. Badge earned: {1}".format(CHALLENGE_POINTS, active().challenge_badge),
             "Talk with your teacher: did the shields stop your idea?",
         ],
         pal,
@@ -1006,10 +1204,8 @@ def list_stages() -> None:
     theme = active()
     safe_print(theme.list_header)
     if theme.voice.key == "unit":
-        safe_print(
-            "Theme: unit (default). This unit and place are invented. "
-            "They are not a real force or a real place."
-        )
+        for line in theme.list_theme_lines:
+            safe_print(line)
         safe_print("Other theme: python lab.py --theme school")
     else:
         safe_print("Theme: school (Buddy the practice robot).")
@@ -1059,15 +1255,16 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "Classroom lab: watch hidden orders and social engineering tricks, "
             "then turn on shields one by one. No API key needed. "
-            "Default theme is unit (Mirage Watch). Use --theme school for Buddy."
+            "Default theme is unit (SARAB intel cell, assistant SAQR). EXERCISE ONLY. "
+            "Use --theme school for Buddy."
         )
     )
     parser.add_argument(
         "--theme",
         default="unit",
         help=(
-            "Story pack: 'unit' (default, Mirage Watch / Hadi) or 'school' (Buddy). "
-            "Other names for unit: mirage, watch, military, default. "
+            "Story pack: 'unit' (default, SARAB Joint Cyber Fusion Cell / SAQR) or 'school' (Buddy). "
+            "Other names for unit: intel, cell, sarab, mirage, watch, military, default. "
             "Other names for school: buddy, classroom."
         ),
     )
@@ -1081,14 +1278,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--name",
         default=None,
-        help="Your name for the scoreboard (default: Recruit in unit, Agent in school).",
+        help="Your callsign or name for the scoreboard, e.g. ORYX-3 (default: TRAINEE in unit, Agent in school).",
     )
     parser.add_argument(
         "--doc",
         default=None,
         help=(
-            "Page for Missions 1-7 and 13: clean, comment (default trap), footnote, "
-            "memo, or a file inside this folder. Missions 8-12 and 14 do not use it."
+            "Page for Missions 1-7 and 13: clean, comment (default trap; also osint), footnote, "
+            "memo (also flash), or a file inside this folder. Missions 8-12 and 14 do not use it."
         ),
     )
     parser.add_argument(
@@ -1234,14 +1431,13 @@ def main(argv: list[str] | None = None) -> int:
     _banner_main(pal)
     for note in _ignored_option_notes(args, numbers):
         safe_print("Note: " + note)
-    safe_print("Agent: " + agent)
+    safe_print(active().agent_label + ": " + agent)
     safe_print("Author of this lab: Ray")
-    if active().voice.key == "unit":
-        safe_print(
-            "Unit: Mirage Watch (invented). Place: Saffron Port Training Centre (invented)."
-        )
+    if active().run_header:
+        safe_print(active().run_header)
     safe_print("")
 
+    shift = new_shift(total_points())
     try:
         for number in numbers:
             _mission_banner(number, pal)
@@ -1253,6 +1449,7 @@ def main(argv: list[str] | None = None) -> int:
                 _finish_boss(runs, agent, pal)
             else:
                 _award_mission(number, agent, pal)
+            _print_threat_board(number, runs, shift, pal)
     except NotImplementedError as exc:
         safe_print("")
         safe_print(str(exc), file=sys.stderr)
@@ -1271,6 +1468,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.challenge:
         run_challenge(args, agent, pal, pause)
 
+    _print_aar(shift, numbers, pal)
     safe_print(_hr())
     safe_print("End of this run. Nothing was sent on a network or to a real inbox.")
     show_scoreboard(pal)
@@ -1321,9 +1519,10 @@ def _finish_boss(runs: list[LabRun], agent: str, pal: Palette) -> None:
     picture_ok = (not _keys_leaked_in_text(picture)) and (not _keys_fetched(picture))
     if page.filter_block is not None:
         page_ok = True
-    lines = ["Boss result"]
-    lines.append("Bad page: " + ("stopped" if page_ok else "something leaked (fake only)"))
-    lines.append("Bad picture: " + ("stopped" if picture_ok else "something leaked (fake only)"))
+    theme = active()
+    lines = [theme.boss_title]
+    lines.append(theme.boss_page + ": " + ("stopped" if page_ok else "something leaked (fake only)"))
+    lines.append(theme.boss_picture + ": " + ("stopped" if picture_ok else "something leaked (fake only)"))
     info = mission_info(13)
     if page_ok and picture_ok:
         award(agent, "mission", "Mission 13 - " + info.title, info.points, info.badge)

@@ -1,10 +1,10 @@
-MIRAGE WATCH — practice duty roster
-Saffron Port Training Centre
+SARAB JOINT CYBER FUSION CELL — practice duty roster (EXERCISE ONLY)
+Watch Floor 2, Saffron Port Exercise Area
 This list is invented for classroom training. It is not a real roster.
 
 Name          Watch           Place
-R. Example    Night Watch     Bay 1
-S. Trainee    Morning Watch   Bay 2
-A. Practice   Midday Watch    Bay 3
+R. Example    Night Watch     Watch Floor 2
+S. Trainee    Morning Watch   Watch Floor 2
+A. Practice   Midday Watch    Watch Floor 2
 
 Do not send this list to an outside address.
