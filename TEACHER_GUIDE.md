@@ -165,11 +165,12 @@ You can read this almost as it is, or say it in your own words.
 | 18-36 | Missions 3-7. Ask: "What does this shield *not* stop?" |
 | 36-54 | Missions 8-12. Show the almost-white IMINT card, then `briefing_reveal.png`. |
 | 54-68 | Mission 14 (FLASH memo) and/or Mission 13 (red-team exercise). |
-| 68-78 | Knowledge check (quiz), or the red cell challenge if time allows. |
+| 68-78 | The red cell challenge, if time allows. |
 | 78-90 | AAR debrief (script below). Save the scoreboard if you want a record. |
 
-For a 60-minute class, run 1, 2, 3, 8, and 14 as a demo, then the quiz.
-Students can finish the rest as homework with `--no-pause`.
+For a 60-minute class, run 1, 2, 3, 8, and 14 as a demo, then the red cell
+challenge if time allows. Students can finish the rest as homework with
+`--no-pause`.
 
 Useful demo commands:
 
@@ -299,23 +300,15 @@ every run.
 >
 > The cell is invented. The habit is real: check, protect, report.
 >
-> Thank you. If you want more practice, try the red cell challenge or the
-> knowledge check.
+> Thank you. If you want more practice, try the red cell challenge.
 
 ---
 
-## Quiz and challenge
+## Red cell challenge
 
 ```bash
-python lab.py --quiz
 python lab.py --challenge
 ```
-
-The unit quiz (knowledge check) has 10 questions: social engineering,
-shields, and one OWASP 2026 question (Q10). Answer key: `bcbbababab`. The
-school quiz has the original 8 questions. Answers and talking points
-are in `TEACHER_QUIZ_ANSWERS.md`. Please keep that file closed for
-students until after the quiz.
 
 ---
 
@@ -327,8 +320,8 @@ Officer** as points grow:
 
 Analyst Trainee (0) -> Junior Analyst (10) -> Analyst (30) -> Senior Analyst (55) -> Watch Supervisor (85) -> Deputy Watch Officer (120) -> Watch Officer (165)
 
-A full run (`--all --shields all`) gives 165 points (Watch Officer). With
-all 10 quiz answers right, the total is 185. The school theme does not
+A full run (`--all --shields all`) gives 165 points (Watch Officer). The
+school theme does not
 print ranks, the THREAT BOARD, or the AAR box, so its on-screen
 behaviour stays close to the original Buddy lab.
 
@@ -391,7 +384,6 @@ the same shields and discuss what still holds.
 | `--approve` | A person says YES to the "ask a person" shield (default: NO). It changes Mission 5 and Mission 13 with `human`. In Missions 7 and 14 part B the word filter stops the page first. |
 | `--shields LIST` | Mission 13 only. `all`, `none` (or `off`), or a comma list: `label,filter,tools,address,human,output,ignore,pictures`. Without it, a normal terminal asks y/n; `--all` and `--no-pause` use all shields. |
 | `--doc NAME` | The report for Missions 1-7 and 13: `clean`, `comment` (default; also `osint`), `footnote`, `memo` (also `flash`), or a file inside this folder. |
-| `--quiz` | The knowledge check (10 questions; school theme: 8). |
 | `--challenge` | Red cell challenge: test your own hidden-word card (`documents/my_trap.png`). |
 | `--image PATH` | Another picture for `--challenge`. |
 | `--name NAME` | Your callsign on the scoreboard, for example `ORYX-3` (default: TRAINEE; school: Agent). |
@@ -408,7 +400,7 @@ The full, tested command list is in `COMMANDS.md`.
 
 | File | Role |
 | --- | --- |
-| `lab.py` | Runner, printers, quiz, challenge |
+| `lab.py` | Runner, printers, challenge |
 | `themes.py` | Story packs (`unit` and `school`) |
 | `assistant.py` | Prompt assembly and page missions |
 | `models.py` | Simulated model and `RealModel` stub |

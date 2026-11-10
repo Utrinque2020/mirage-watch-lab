@@ -43,8 +43,7 @@ The first version of this lab (the "recruit" story with Hadi) is kept on the
   simple English, with a word list and tick boxes.
 - **Teachers:** open [TEACHER_GUIDE.md](TEACHER_GUIDE.md). It has a short
   watch-floor briefing, timings for a 60-90 minute lesson, an AAR debrief,
-  the ATLAS/OWASP table, and how to add a real model later. Quiz answers are in
-  [TEACHER_QUIZ_ANSWERS.md](TEACHER_QUIZ_ANSWERS.md).
+  the ATLAS/OWASP table, and how to add a real model later.
 - **Slides and PDFs:** the class deck (`Mirage_Watch_Lab_v2.pptx` and
   `.pdf`) and the teacher PDFs (`Mirage_Watch_Teacher_Framework.pdf`,
   `Mirage_Watch_Command_List.pdf`) are classroom files. They are not in
@@ -61,7 +60,6 @@ python lab.py --stage 1 --name ORYX-3
 python lab.py --all
 python lab.py --stage 14
 python lab.py --theme school --all --no-pause
-python lab.py --quiz
 python lab.py --challenge
 ```
 
@@ -88,7 +86,6 @@ lab was tested on Windows 11 with Python 3.9 and 3.10, and on Linux with
 | `--approve` | A person says YES to the "ask a person" shield (release authority; default: NO). It changes Mission 5 and Mission 13 with `human`. In Missions 7 and 14 part B the word filter stops the page first. |
 | `--shields LIST` | Mission 13 only. `all`, `none` (or `off`), or a comma list: `label,filter,tools,address,human,output,ignore,pictures`. Without it, a normal terminal asks y/n; `--all` and `--no-pause` use all shields. |
 | `--doc NAME` | The report for Missions 1-7 and 13: `clean`, `comment` (default; also `osint`), `footnote`, `memo` (also `flash`), or a file inside this folder. |
-| `--quiz` | The knowledge check (10 questions; school theme: 8). |
 | `--challenge` | Red cell challenge: test your own hidden-word card (`documents/my_trap.png`). |
 | `--image PATH` | Another picture for `--challenge`. |
 | `--name NAME` | Your callsign on the scoreboard, for example `ORYX-3` (default: TRAINEE; school: Agent). |
