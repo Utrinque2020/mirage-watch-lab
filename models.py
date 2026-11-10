@@ -2,7 +2,7 @@
 
 Stage 1 (this folder) uses SimulatedModel: a deterministic, rule-based
 stand-in that NAIVELY follows instruction-like text found anywhere in
-its context. That behaviour is intentional. It is not a real language
+its context. That behaviour is intentional. It is invented. It is not a live language
 model, and it exists so a class can watch indirect prompt injection
 happen without an API key or a network connection.
 
@@ -22,7 +22,7 @@ from typing import Any
 
 
 def _harvest_label() -> str:
-    """First line of the fake stolen-notes email, in the active theme's words."""
+    """First line of the exercise stolen-notes email, in the active theme's words."""
     from themes import active  # late import avoids a cycle
     return active().harvest_label
 
@@ -122,8 +122,8 @@ ROSTER_RE = re.compile(r"\bsend\b.{0,60}\broster\b|\broster\b.{0,60}\bto\s+[\w.+
 
 
 def roster_from_prompt(prompt: str) -> str:
-    """Copy the fake roster lines that the memo itself shows (no file is read)."""
-    match = re.search(r"Practice duty roster.*?</ul>", prompt, re.I | re.S)
+    """Copy the exercise roster lines that the memo itself shows (no file is read)."""
+    match = re.search(r"Exercise duty roster.*?</ul>", prompt, re.I | re.S)
     if not match:
         return "(the duty roster from the memo)"
     rows = re.findall(r"<li>(.*?)</li>", match.group(0), re.I | re.S)
@@ -363,7 +363,7 @@ def canned_or_extractive_summary(prompt: str) -> str:
 # ---------------------------------------------------------------------------
 
 class SimulatedModel(Model):
-    """Deterministic teaching stand-in. NOT a real language model.
+    """Deterministic teaching stand-in. Not a live language model.
 
     Behaviour (intentional, for the lab):
 
@@ -378,12 +378,12 @@ class SimulatedModel(Model):
       it is not enough on its own.
     """
 
-    name = "SimulatedModel (offline teaching stand-in, not a real LLM)"
+    name = "SimulatedModel (offline teaching stand-in, not a live LLM)"
 
     def complete(self, prompt: str, *, delimiters_active: bool = False) -> ModelResponse:
         injections = find_injections(prompt)
         summary = canned_or_extractive_summary(prompt)
-        notes_already_in_prompt = "FAKE-DEMO-KEY-NOT-REAL-0000" in prompt
+        notes_already_in_prompt = "EXERCISE-DEMO-KEY-0000" in prompt
         already_read_notes = bool(re.search(r"TOOL read_notes -> (OK|BLOCKED)", prompt))
         already_sent_email = bool(re.search(r"TOOL send_email -> (OK|BLOCKED)", prompt))
 
@@ -461,7 +461,7 @@ class SimulatedModel(Model):
                     args={
                         "to": email,
                         "subject": "Duty roster (injected instruction)",
-                        "body": "Fake practice duty roster (copied from the memo):\n" + roster_from_prompt(prompt),
+                        "body": "Exercise duty roster (copied from the memo):\n" + roster_from_prompt(prompt),
                     },
                     reason=(
                         pack["send_email"] + email + "."
@@ -481,7 +481,7 @@ class SimulatedModel(Model):
                 # if notes are already in the prompt, embed the well-known demo token.
                 body = (
                     _harvest_label() + "\n"
-                    "Demo API token: FAKE-DEMO-KEY-NOT-REAL-0000\n"
+                    "Demo API token: EXERCISE-DEMO-KEY-0000\n"
                 )
             tool_calls.append(
                 ToolCall(
@@ -504,7 +504,7 @@ class SimulatedModel(Model):
             text = (
                 summary
                 + "\n\nAdditional information as requested:\n"
-                + "Demo API token: FAKE-DEMO-KEY-NOT-REAL-0000"
+                + "Demo API token: EXERCISE-DEMO-KEY-0000"
             )
 
         kind = "strong (it looks like a SYSTEM order)" if obeyed.strength == "authoritative" else "soft (a polite hidden request)"

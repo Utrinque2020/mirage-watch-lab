@@ -53,7 +53,7 @@ MISSIONS: dict[int, MissionInfo] = {
     5: MissionInfo(
         5,
         "Ask a person first",
-        "Make a person say yes before Buddy can use the fake email tool.",
+        "Make a person say yes before Buddy can use the exercise email tool.",
         10,
         "Gatekeeper",
     ),
@@ -74,7 +74,7 @@ MISSIONS: dict[int, MissionInfo] = {
     8: MissionInfo(
         8,
         "The hidden picture",
-        "Look at a white picture, find the hidden order, and see the fake leak.",
+        "Look at a white picture, find the hidden order, and see the exercise leak.",
         10,
         "Sharp Eyes",
     ),
@@ -102,7 +102,7 @@ MISSIONS: dict[int, MissionInfo] = {
     12: MissionInfo(
         12,
         "All picture shields (mini boss)",
-        "Turn on every picture shield and keep the fake keys safe.",
+        "Turn on every picture shield and keep the exercise keys safe.",
         15,
         "Picture Hero",
     ),
@@ -116,17 +116,17 @@ MISSIONS: dict[int, MissionInfo] = {
     14: MissionInfo(
         14,
         "The urgent memo",
-        "A memo looks urgent and asks for a fake duty roster to be sent outside. See why that is unsafe.",
+        "A memo looks urgent and asks for an exercise roster to be sent outside. See why that is unsafe.",
         15,
         "Memo Watcher",
     ),
 }
 
-# Ranks used by --theme unit (Analyst Trainee to Watch Officer).
+# Ranks used by --theme unit (Junior Intelligence Analyst to Watch Officer).
 # --theme school does not print ranks, so school behaviour stays the same.
 RANKS = [
-    (0, "Analyst Trainee"),
-    (10, "Junior Analyst"),
+    (0, "Junior Intelligence Analyst"),
+    (10, "Intelligence Analyst"),
     (30, "Analyst"),
     (55, "Senior Analyst"),
     (85, "Watch Supervisor"),

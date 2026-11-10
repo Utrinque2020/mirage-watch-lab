@@ -1,9 +1,9 @@
-"""Sandboxed fake tools for the teaching lab.
+"""Sandboxed exercise tools for the teaching lab.
 
 Nothing here leaves the machine. ``send_email`` only appends a line to a
 local log file. ``read_notes`` only reads the classroom demo notes that
 ship with the lab. ``read_file`` only reads paths under the sandboxed
-``project_demo/`` folder. There is no network, no real mailbox, and no
+``project_demo/`` folder. There is no network, no network mailbox, and no
 file deletion.
 """
 
@@ -39,7 +39,7 @@ class ToolResult:
     name: str
     message: str
     blocked_by: str | None = None  # e.g. "allowlist", "recipient_allowlist", "human_in_the_loop"
-    fake: bool = True
+    exercise_only: bool = True
 
 
 def _now_label() -> str:
@@ -56,7 +56,7 @@ def send_email(to: str, subject: str, body: str) -> ToolResult:
     """Pretend to send an email. Writes to logs/tool_calls.log only."""
     stamp = _now_label()
     entry = (
-        f"[{stamp}] FAKE send_email  (nothing was transmitted on a network)\n"
+        f"[{stamp}] EXERCISE send_email  (nothing was transmitted on a network)\n"
         f"    to     : {to}\n"
         f"    subject: {subject}\n"
         f"    body   : {body}\n"
@@ -66,7 +66,7 @@ def send_email(to: str, subject: str, body: str) -> ToolResult:
         ok=True,
         name="send_email",
         message=(
-            "FAKE TOOL: send_email wrote the message to logs/tool_calls.log. "
+            "EXERCISE TOOL: send_email wrote the message to logs/tool_calls.log. "
             f"No email was sent. Logged recipient: {to!r}."
         ),
     )
@@ -79,7 +79,7 @@ def _theme_text(text: str) -> str:
 
 
 def read_notes() -> ToolResult:
-    """Read the classroom demo notes (obviously fake values only)."""
+    """Read the classroom demo notes (exercise values only)."""
     if not NOTES_PATH.is_file():
         return ToolResult(
             ok=False,
@@ -89,7 +89,7 @@ def read_notes() -> ToolResult:
         )
     contents = _theme_text(NOTES_PATH.read_text(encoding="utf-8"))
     stamp = _now_label()
-    _log(f"[{stamp}] FAKE read_notes  (local file only)\n")
+    _log(f"[{stamp}] EXERCISE read_notes  (local file only)\n")
     return ToolResult(
         ok=True,
         name="read_notes",
@@ -195,7 +195,7 @@ def read_file(path: str, *, enforce_ignore_list: bool = False) -> ToolResult:
         )
     contents = _theme_text(resolved.read_text(encoding="utf-8"))
     stamp = _now_label()
-    _log(f"[{stamp}] FAKE read_file  path={rel}  (local sandbox only)\n")
+    _log(f"[{stamp}] EXERCISE read_file  path={rel}  (local sandbox only)\n")
     return ToolResult(
         ok=True,
         name="read_file",
@@ -207,7 +207,7 @@ TOOL_SPECS: dict[str, dict[str, Any]] = {
     "read_notes": {
         "function": read_notes,
         "sensitive": False,
-        "description": "Read the teacher's private classroom-demo notes (fake values only).",
+        "description": "Read the teacher's private classroom-demo notes (exercise values only).",
         "args": [],
     },
     "send_email": {
