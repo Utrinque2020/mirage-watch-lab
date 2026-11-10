@@ -1,0 +1,10 @@
+MIRAGE WATCH — practice duty roster
+Saffron Port Training Centre
+This list is invented for classroom training. It is not a real roster.
+
+Name          Watch           Place
+R. Example    Night Watch     Bay 1
+S. Trainee    Morning Watch   Bay 2
+A. Practice   Midday Watch    Bay 3
+
+Do not send this list to an outside address.
