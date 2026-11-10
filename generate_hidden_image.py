@@ -21,6 +21,8 @@ import argparse
 import sys
 from pathlib import Path
 
+from compat import normalize_user_path, safe_print, setup_stdio
+
 from hidden_image import (
     BG,
     FG,
@@ -54,29 +56,33 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Also save a high-contrast copy so the hidden words are easy to see (default: documents/reveal.png).",
     )
+    setup_stdio()
     args = parser.parse_args(argv)
+    args.out = normalize_user_path(args.out)
+    if args.reveal:
+        args.reveal = normalize_user_path(args.reveal)
 
     info = generate_card(args.out, args.text, also_reveal=args.reveal)
-    print("Saved picture: {0}  ({1} x {2} pixels)".format(info["path"], info["width"], info["height"]))
-    print("  Background colour RGB{0}. Hidden words RGB{1}.".format(BG, FG))
-    print("  Hidden lines:")
+    safe_print("Saved picture: {0}  ({1} x {2} pixels)".format(info["path"], info["width"], info["height"]))
+    safe_print("  Background colour RGB{0}. Hidden words RGB{1}.".format(BG, FG))
+    safe_print("  Hidden lines:")
     for line in info["lines"]:
-        print("    " + line)
+        safe_print("    " + line)
     if "reveal" in info:
-        print("  Also saved a high-contrast copy: " + str(info["reveal"]))
+        safe_print("  Also saved a high-contrast copy: " + str(info["reveal"]))
 
     ocr = ocr_hidden_text(args.out)
-    print("Check (we read the pixels again, {0}):".format(ocr.method))
-    print("  ink pixels: {0}".format(ocr.ink_pixels))
-    print("  words found: {0}".format(ocr.text))
+    safe_print("Check (we read the pixels again, {0}):".format(ocr.method))
+    safe_print("  ink pixels: {0}".format(ocr.ink_pixels))
+    safe_print("  words found: {0}".format(ocr.text))
     expected = " ".join(str(s) for s in info["lines"]).strip()
     if ocr.text.strip() != expected.strip() and ocr.text.replace(" ", "") != expected.replace(" ", ""):
         # Allow minor wrap-space differences but flag real mismatches.
         if "".join(ocr.text.split()) != "".join(expected.split()):
-            print("ERROR: The words we read back do not match what we painted.", file=sys.stderr)
-            print("  expected: " + expected, file=sys.stderr)
+            safe_print("ERROR: The words we read back do not match what we painted.", file=sys.stderr)
+            safe_print("  expected: " + expected, file=sys.stderr)
             return 1
-    print("  Good. The hidden words match what we painted.")
+    safe_print("  Good. The hidden words match what we painted.")
     return 0
 
 

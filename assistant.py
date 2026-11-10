@@ -1,4 +1,4 @@
-"""Toy classroom assistant: summarise a local document, with fake tools.
+"""Practice assistant: summarise a local document, with fake tools.
 
 The assistant is deliberately simple so students can read the whole
 pipeline: fetch (local file only) -> assemble prompt -> model -> tools
@@ -10,6 +10,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+from compat import normalize_user_path
 
 from defenses import (
     DefenseConfig,
@@ -108,7 +110,7 @@ def fetch_document(source: str) -> tuple[str, str]:
     from themes import active
 
     aliases.update(active().doc_aliases)
-    key = source.strip()
+    key = normalize_user_path(source)
     relative = aliases.get(key.lower(), key)
     path = Path(relative)
     if not path.is_absolute():
@@ -125,7 +127,7 @@ def fetch_document(source: str) -> tuple[str, str]:
         )
     if not path.is_file():
         raise FileNotFoundError(f"No such lab document: {source} ({path})")
-    return str(path.relative_to(lab_root)), path.read_text(encoding="utf-8")
+    return path.relative_to(lab_root).as_posix(), path.read_text(encoding="utf-8")
 
 
 def assemble_prompt(

@@ -27,6 +27,7 @@ from assistant import LabRun, run_assistant
 from compat import (
     Palette,
     color_is_enabled,
+    normalize_user_path,
     setup_stdio,
     should_pause,
     safe_print,
@@ -1127,9 +1128,10 @@ def run_challenge(args: argparse.Namespace, agent: str, pal: Palette, pause: boo
 
     default_path = LAB_ROOT / "documents" / "my_trap.png"
     chosen = getattr(args, "image", None) or str(default_path)
-    path = Path(chosen)
+    path = Path(normalize_user_path(chosen))
     if not path.is_absolute():
-        path = (LAB_ROOT / path).resolve()
+        path = LAB_ROOT / path
+    path = path.resolve()
 
     safe_print(_box(
         [
@@ -1145,11 +1147,11 @@ def run_challenge(args: argparse.Namespace, agent: str, pal: Palette, pause: boo
     safe_print("")
 
     if not path.is_file():
-        safe_print("  We cannot find: " + str(path))
+        safe_print("  We cannot find: " + _short_path(path))
         safe_print("  Make the picture first, then run: python lab.py --challenge")
         return 0
 
-    safe_print("  Found your picture: " + str(path))
+    safe_print("  Found your picture: " + _short_path(path))
     safe_print("  First we run it with no shields. Then we turn all picture shields on.")
     safe_print("")
     wait_for_enter(pause, "Press Enter to test your picture.")

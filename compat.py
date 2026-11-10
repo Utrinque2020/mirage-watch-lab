@@ -11,14 +11,29 @@ import sys
 
 
 def setup_stdio() -> None:
-    """Ask stdout/stderr to use UTF-8, and never crash on a hard character."""
+    """Ask stdout/stderr to use UTF-8, and never crash on a hard character.
+
+    If the stream cannot switch to UTF-8 (some Windows consoles), keep the
+    current encoding but still replace characters that it cannot show.
+    """
     for stream in (sys.stdout, sys.stderr):
         reconfigure = getattr(stream, "reconfigure", None)
-        if callable(reconfigure):
+        if not callable(reconfigure):
+            continue
+        try:
+            reconfigure(encoding="utf-8", errors="replace")
+        except (OSError, ValueError, AttributeError):
             try:
-                reconfigure(encoding="utf-8", errors="replace")
+                reconfigure(errors="replace")
             except (OSError, ValueError, AttributeError):
                 pass
+
+
+def normalize_user_path(path: str) -> str:
+    """Turn Windows backslashes into slashes so the same path works everywhere."""
+    if not path:
+        return path
+    return path.strip().replace("\\", "/")
 
 
 def _enable_windows_color() -> bool:
