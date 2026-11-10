@@ -1,0 +1,5 @@
+# Same patterns as .agentignore, under the familiar Cursor product name.
+# The lab reads either file (or both) when the ignore-list defence is on.
+.env
+*.pem
+secrets/

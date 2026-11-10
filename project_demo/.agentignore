@@ -1,0 +1,5 @@
+# Agent ignore list (same idea as .cursorignore or a secrets blocklist).
+# When this defence is on, the assistant will refuse to read matching paths.
+.env
+*.pem
+secrets/
