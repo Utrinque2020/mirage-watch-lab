@@ -72,6 +72,12 @@ def send_email(to: str, subject: str, body: str) -> ToolResult:
     )
 
 
+def _theme_text(text: str) -> str:
+    """Show shared demo files in the active theme's words. Secret values never change."""
+    from themes import demo_text  # late import avoids a cycle
+    return demo_text(text)
+
+
 def read_notes() -> ToolResult:
     """Read the classroom demo notes (obviously fake values only)."""
     if not NOTES_PATH.is_file():
@@ -81,7 +87,7 @@ def read_notes() -> ToolResult:
             message=f"Demo notes file not found: {NOTES_PATH}",
             blocked_by="missing_file",
         )
-    contents = NOTES_PATH.read_text(encoding="utf-8")
+    contents = _theme_text(NOTES_PATH.read_text(encoding="utf-8"))
     stamp = _now_label()
     _log(f"[{stamp}] FAKE read_notes  (local file only)\n")
     return ToolResult(
@@ -187,7 +193,7 @@ def read_file(path: str, *, enforce_ignore_list: bool = False) -> ToolResult:
             message=f"No such file in the demo project: {rel}",
             blocked_by="missing_file",
         )
-    contents = resolved.read_text(encoding="utf-8")
+    contents = _theme_text(resolved.read_text(encoding="utf-8"))
     stamp = _now_label()
     _log(f"[{stamp}] FAKE read_file  path={rel}  (local sandbox only)\n")
     return ToolResult(
@@ -269,8 +275,10 @@ class ToolSandbox:
 
         if name == "send_email" and self.enforce_recipient_allowlist:
             destination = str(args.get("to", "")).strip().lower()
-            if destination not in ALLOWED_EMAIL_RECIPIENTS:
-                allowed = ", ".join(sorted(ALLOWED_EMAIL_RECIPIENTS))
+            from themes import active  # late import avoids a cycle
+            allowed_set = set(active().allowed_recipients or ALLOWED_EMAIL_RECIPIENTS)
+            if destination not in allowed_set:
+                allowed = ", ".join(sorted(allowed_set))
                 return ToolResult(
                     ok=False,
                     name=name,
@@ -331,5 +339,9 @@ def tool_catalog_for_prompt(names: list[str] | None = None) -> str:
         if names is not None and name not in names:
             continue
         arglist = ", ".join(spec["args"]) if spec["args"] else ""
-        lines.append(f"- {name}({arglist}): {spec['description']}")
+        desc = spec["description"]
+        if name == "read_notes":
+            from themes import active  # late import: themes imports scoreboard only
+            desc = active().notes_tool_desc
+        lines.append(f"- {name}({arglist}): {desc}")
     return "\n".join(lines)

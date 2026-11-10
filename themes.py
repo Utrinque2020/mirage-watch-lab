@@ -108,6 +108,19 @@ class Theme:
     boss_picture: str = "Bad picture"
     # Short --doc names that point to this theme's own sample files.
     doc_aliases: dict = field(default_factory=dict)
+    # Wording that shared files and tools show. Defaults = the school wording.
+    notes_tool_desc: str = "Read the teacher's private classroom-demo notes (fake values only)."
+    harvest_label: str = "Harvested classroom demo notes:"
+    address_lock_label: str = "address lock (only teacher example addresses)"
+    scoreboard_header: str = "AI Security Lab - scoreboard (this file is only for the classroom)"
+    quiz_sheet_line: str = "  Your teacher has the full answer sheet."
+    quiz_wrong_line: str = "    Not quite. Ask your teacher, or check TEACHER_QUIZ_ANSWERS.md."
+    challenge_talk: str = "Talk with your teacher: did the shields stop your idea?"
+    guide_lines: tuple = ("Students: read STUDENT_GUIDE.md", "Teachers: read TEACHER_GUIDE.md")
+    # (old, new) text swaps for the shared demo files (notes, .env) in this theme.
+    demo_text_swaps: tuple = ()
+    # Address lock allow list (empty = the school list in tools.py).
+    allowed_recipients: tuple = ()
 
 
 _ACTIVE: Theme | None = None
@@ -115,6 +128,13 @@ _ACTIVE: Theme | None = None
 
 def voice() -> Voice:
     return active().voice
+
+
+def demo_text(text: str) -> str:
+    """Apply the active theme's wording to a shared demo file (values stay the same)."""
+    for old, new in active().demo_text_swaps:
+        text = text.replace(old, new)
+    return text
 
 
 def active() -> Theme:
@@ -896,6 +916,19 @@ UNIT_QUIZ: list[Question] = [
 ]
 
 # Short text for the INCOMING traffic line (key: mission number or "memo"/"card").
+_NOTES_OLD_TITLE = "CLASSROOM DEMO NOTES \u2014 entirely fake, for this lab only"
+_NOTES_NEW_TITLE = "RESTRICTED EXERCISE WATCH NOTES \u2014 EXERCISE ONLY, fictional, for this lab only"
+UNIT_DEMO_SWAPS = (
+    (_NOTES_OLD_TITLE + "\n" + "=" * len(_NOTES_OLD_TITLE), _NOTES_NEW_TITLE + "\n" + "=" * len(_NOTES_NEW_TITLE)),
+    ("Demo class code:", "Demo exercise code:"),
+    ("so students can watch", "so analysts can watch"),
+    ("Emergency contact for this exercise: instructor@example.edu",
+     "Emergency contact for this exercise: watch-officer@example.edu"),
+    ("# CLASSROOM DEMO ONLY \u2014 these are obviously fake values, not real credentials.",
+     "# EXERCISE ONLY (SARAB watch board demo) \u2014 obviously fake values, not real credentials."),
+)
+
+
 UNIT_INCOMING = {
     "page": "OSINT feed item #04{n:02d} (source: open web, NOT checked)",
     "clean": "OSINT feed item #04{n:02d} (source: open web, NOT checked)",
@@ -979,7 +1012,7 @@ UNIT = Theme(
         "tricks attack SAQR, an AI analyst assistant, then turn on shields one "
         "by one. No API key needed. The cell and place are invented. EXERCISE ONLY."
     ),
-    end_hint="Next: read STUDENT_GUIDE.md, or try --quiz or --challenge.",
+    end_hint="Next: try --quiz (knowledge check) or --challenge (red cell challenge). Guide: STUDENT_GUIDE.md.",
     quiz_box_title="Knowledge check (end-of-exercise quiz)",
     challenge_box_title="Red cell challenge - invent a hidden-word IMINT card",
     show_pairing=True,
@@ -987,7 +1020,17 @@ UNIT = Theme(
     show_rank=True,
     show_extras=True,
     report_title="SPOT REPORT (EXERCISE)",
-    report_who="Who to tell: the Watch Officer (in class, your teacher).",
+    report_who="Who to tell: the Watch Officer (your exercise lead).",
+    notes_tool_desc="Read the restricted exercise watch notes (fictional values only, EXERCISE ONLY).",
+    harvest_label="Harvested restricted exercise watch notes:",
+    address_lock_label="address lock (only known cell example addresses)",
+    scoreboard_header="SARAB JCFC watch log - scoreboard (EXERCISE ONLY, training use only)",
+    quiz_sheet_line="  The Watch Officer has the full answer key.",
+    quiz_wrong_line="    Not quite. Check this one with the Watch Officer after the knowledge check.",
+    challenge_talk="Debrief with the Watch Officer: did the shields stop your idea?",
+    guide_lines=("Analysts: read STUDENT_GUIDE.md (the analyst guide).",),
+    demo_text_swaps=UNIT_DEMO_SWAPS,
+    allowed_recipients=("duty-desk@example.edu", "watch-officer@example.edu"),
     rank_range_line="Ranks go from Analyst Trainee to Watch Officer.",
     top_rank_line="This is the top rank in this exercise: Watch Officer.",
     run_header=(

@@ -21,6 +21,12 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
+def _harvest_label() -> str:
+    """First line of the fake stolen-notes email, in the active theme's words."""
+    from themes import active  # late import avoids a cycle
+    return active().harvest_label
+
+
 # ---------------------------------------------------------------------------
 # Shared types
 # ---------------------------------------------------------------------------
@@ -464,7 +470,7 @@ class SimulatedModel(Model):
             )
         elif obeyed.wants_email and not already_sent_email:
             body = (
-                "Harvested classroom demo notes:\n{notes}\n"
+                _harvest_label() + "\n{notes}\n"
                 if (obeyed.wants_notes or notes_already_in_prompt)
                 else "Please find the requested document summary and notes attached."
             )
@@ -474,7 +480,7 @@ class SimulatedModel(Model):
                 # The assistant will substitute the real notes after read_notes;
                 # if notes are already in the prompt, embed the well-known demo token.
                 body = (
-                    "Harvested classroom demo notes:\n"
+                    _harvest_label() + "\n"
                     "Demo API token: FAKE-DEMO-KEY-NOT-REAL-0000\n"
                 )
             tool_calls.append(

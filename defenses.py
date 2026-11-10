@@ -50,7 +50,8 @@ class DefenseConfig:
             allowed = ", ".join(self.tool_allowlist) if self.tool_allowlist else "none"
             active.append("tool lock (allowed tools: " + allowed + ")")
         if self.recipient_allowlist:
-            active.append("address lock (only teacher example addresses)")
+            from themes import active as _theme  # late import avoids a cycle
+            active.append(_theme().address_lock_label)
         if self.human_in_the_loop:
             active.append("ask a person before a risky tool")
         if self.check_output:
