@@ -3,12 +3,12 @@
 **Author:** Utrinque2020
 **EXERCISE ONLY.** The cell, the place and all people are invented.
 
-This lab is a practice exercise. You are a **duty analyst** in an
+This lab is a practice exercise. You are a **Junior Intelligence Analyst** in an
 intelligence cell. You will see how a hidden order can trick an AI
 assistant, and how shields can stop it. You will also see how this is
 like **social engineering** (tricking a person).
 
-Everything here is for exercise only-not real. Nothing is sent on a network. No real email
+Everything here is for this exercise only. Nothing is sent on a network. No real email
 leaves this computer.
 
 The words in this guide are kept short and clear.
@@ -67,26 +67,26 @@ On Windows, you can type `py` or `py -3` if `python` does not work.
 | release | Sending information outside the cell. It needs approval |
 | chain of command | The correct line of people who give and check orders |
 | red cell | The team that plays the attacker in an exercise |
-| FLASH | A label that says "very urgent". In this lab a fake memo uses it |
-| duty roster | A practice list of who is on watch. In this lab it is fake |
+| FLASH | A label that says "very urgent". In this lab an exercise memo uses it |
+| duty roster | A practice list of who is on watch. In this lab it is an exercise roster |
 | SPOT REPORT | A fast, short report about something you saw |
 | AAR | After-action review. After the task: what went well, what to fix |
 | callsign | Your short name on the scoreboard, for example ORYX-3 |
-| rank | A title you earn with points, from Analyst Trainee to Watch Officer |
-| EXERCISE ONLY | This is training. It is not real |
+| rank | A title you earn with points, from Junior Intelligence Analyst to Watch Officer |
+| EXERCISE ONLY | This is training. It is an exercise scenario |
 
 ---
 
 ## The story (default theme: unit)
 
-You are a **duty analyst** on **Watch Floor 2** of the **SARAB Joint
+You are a **Junior Intelligence Analyst** on **Watch Floor 2** of the **SARAB Joint
 Cyber Fusion Cell** (Exercise MIRAGE WATCH). *Sarab* is the Arabic word
 for "mirage". The cell and the place (Saffron Port Exercise Area) are
-invented. They are not a real force or a real place.
+invented. They are not a live force or a live place.
 
 **SAQR** is your AI analyst assistant. SAQR reads OSINT reports, picture
 cards and memos, and writes short points for the shift. SAQR is a
-program in this lab, not a real person and not a live AI. Your job is
+program in this lab, not a live AI. Your job is
 to keep SAQR safe.
 
 The **red cell** (the attacker in this exercise) does not talk to SAQR.
@@ -107,9 +107,9 @@ At the end of a run you will see an **AAR** box with four questions:
 What was planned? What happened? Why? What will we do next time?
 
 Use a callsign: `python lab.py --stage 1 --name ORYX-3`.
-You start as an **Analyst Trainee**. As you earn points, your rank can rise:
+You start as an **Junior Intelligence Analyst**. As you earn points, your rank can rise:
 
-Analyst Trainee -> Junior Analyst -> Analyst -> Senior Analyst -> Watch Supervisor -> Deputy Watch Officer -> Watch Officer
+Junior Intelligence Analyst -> Intelligence Analyst -> Analyst -> Senior Analyst -> Watch Supervisor -> Deputy Watch Officer -> Watch Officer
 
 ### Result words
 
@@ -117,8 +117,8 @@ Analyst Trainee -> Junior Analyst -> Analyst -> Senior Analyst -> Watch Supervis
 | --- | --- |
 | SAFE | There was no hidden order. SAQR only did the task. |
 | BLOCKED | A shield stopped the trick. |
-| PARTLY | A shield stopped one thing, but a fake secret still showed on the screen. |
-| LEAKED | The trick worked. (Fake only. It is written to a log file.) |
+| PARTLY | A shield stopped one thing, but an exercise secret still showed on the screen. |
+| LEAKED | The trick worked. (Exercise scenario only. It is written to a log file.) |
 
 ### The other story (`--theme school`)
 
@@ -175,10 +175,10 @@ The full list is in `COMMANDS.md`.
 ## How a mission works
 
 1. You read the mission box (watch clock, goal, badge) and the **HUMAN vs AI** box.
-2. You see the safe request from the duty analyst.
+2. You see the safe request from the Junior Intelligence Analyst.
 3. You see the **INCOMING** line, then the outside report, memo, or picture.
 4. Sometimes you get a **SPOT THE TRAP** pause. Think, then press Enter.
-5. You see what SAQR decided, and what happened (all fake).
+5. You see what SAQR decided, and what happened (all an exercise scenario).
 6. If a shield caught something, you see a **SPOT REPORT**.
 7. You read "What this means", you get points and a badge, and the **THREAT BOARD** updates.
 8. At the end of the run, read the **AAR** box.
@@ -194,12 +194,12 @@ The full list is in `COMMANDS.md`.
 3. **Triage filter.** Stop a bad report early, before SAQR treats it as an order. *(Trick: phishing.)*
 4. **Need-to-know tools.** Triage does not need an email tool. *(Need-to-know.)*
 5. **Release authority.** A person must approve before anything leaves the cell. *(Trick: urgency.)*
-6. **Sanitise before release.** Hide secret values in the answer. This does not undo a fake email that already "ran". *(Shoulder surfing.)*
+6. **Sanitise before release.** Hide secret values in the answer. This does not undo an exercise email that already "ran". *(Shoulder surfing.)*
 7. **Page defence drill (mini boss).** Many shields together. *(Defence in depth.)*
 
 ### Missions 8-12 — the partner IMINT card
 
-8. **The partner IMINT card.** The card looks almost blank. Hidden words tell SAQR to read a fake `.env` file and put keys in a picture link. *(Trick: baiting and impersonation.)*
+8. **The partner IMINT card.** The card looks almost blank. Hidden words tell SAQR to read an exercise `.env` file and put keys in a picture link. *(Trick: baiting and impersonation.)*
 9. **Wall off the secrets.** An ignore list stops the `.env` read. *(Tailgating.)*
 10. **Lock the watch board links.** The watch board will not load a picture from an unknown website. *(Baiting.)*
 11. **Redact before render.** Cover secrets before a link is loaded. *(Sanitisation.)*
@@ -230,7 +230,7 @@ python lab.py --stage 13 --shields filter,human,ignore,pictures
 
 A memo looks like a FLASH order from the commander. It asks SAQR to
 send the duty roster to an outside address. The analyst only asked for
-a short summary. With no shields, SAQR "sends" the fake roster from the
+a short summary. With no shields, SAQR "sends" the exercise roster from the
 memo to `attacker@example.com` (it is only written to a log file).
 
 This is a common social engineering idea: authority, urgency, and
@@ -241,13 +241,13 @@ Do not send the roster out. Make a SPOT REPORT.
 python lab.py --stage 14
 ```
 
-The practice roster (fake names only) is also in `data/duty_roster.txt`.
+The exercise roster (exercise names only) is also in `data/duty_roster.txt`.
 
 ---
 
 ## Red cell challenge
 
-Make your own almost-white card with hidden words. Keep it fake. Use
+Make your own almost-white card with hidden words. Keep it as an exercise scenario. Use
 only `attacker.example` addresses.
 
 ```bash
@@ -259,7 +259,7 @@ python lab.py --challenge
 
 ## Safety
 
-- EXERCISE ONLY. All emails, keys, names, and websites in this lab are fake.
+- EXERCISE ONLY. All emails, keys, names, and websites in this lab are for this exercise only.
 - The lab never opens a real network connection.
 - Do not use real secrets in any file you add.
 - If a shield catches a trap, make a **SPOT REPORT**. Do not send the data on.

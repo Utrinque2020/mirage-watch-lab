@@ -9,17 +9,16 @@ For cyber intelligence students. English is kept simple
 
 The default story is the **SARAB Joint Cyber Fusion Cell**, an invented
 intelligence cell on Watch Floor 2 of the invented **Saffron Port Exercise
-Area**. Students are **duty analysts**. Their AI analyst assistant is
+Area**. Students are **Junior Intelligence Analysts**. Their AI analyst assistant is
 **SAQR** (Arabic for "falcon"). SAQR triages OSINT reports, adds partner
 IMINT cards to the watch board, and summarises memos. The **red cell** hides
 orders inside that content. The students turn on shields to keep SAQR safe.
-The cell, the place and all people are invented. They are not a real force,
-a real location or a real operation.
+The cell, the place and all people are invented. EXERCISE ONLY.
 
 The fun parts: a **watch clock** (exercise time), an **INCOMING** traffic
 line, a live **THREAT BOARD**, **SPOT REPORT** boxes, a **red-team exercise**
 (Mission 13), an **AAR** (after-action review) box, callsigns, and ranks from
-**Analyst Trainee** to **Watch Officer**.
+**Junior Intelligence Analyst** to **Watch Officer**.
 
 Each mission is mapped to **MITRE ATLAS** (for example AML.T0051.001
 Indirect prompt injection) and the **OWASP Top 10 for LLM Applications 2026**
@@ -28,9 +27,9 @@ table is in TEACHER_GUIDE.md.
 
 The classroom story is still here as `--theme school`. In that pack,
 students keep **Buddy**, a friendly practice robot, safe. The shields and
-the fake tools are the same in both themes.
+the exercise tools are the same in both themes.
 
-Everything is fake and local. There is no API key, no network call, and
+Everything is an exercise scenario and is local. There is no API key, no network call, and
 nothing to install with pip. Python 3.8 or newer is enough (tested on
 3.8, 3.9 and 3.13).
 
@@ -113,8 +112,8 @@ python generate_hidden_image.py --reveal
 
 ## Logs
 
-`logs/scoreboard.txt` keeps points. `logs/tool_calls.log` keeps the fake emails.
-`logs/attacker_requests.log` keeps the fake web visits. Nothing leaves the computer.
+`logs/scoreboard.txt` keeps points. `logs/tool_calls.log` keeps the exercise emails.
+`logs/attacker_requests.log` keeps the exercise web visits. Nothing leaves the computer.
 
 ## Sample files (unit theme)
 

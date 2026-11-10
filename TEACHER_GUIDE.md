@@ -10,12 +10,12 @@ follow a hidden order, then turn on shields one by one.
 
 The default theme is a fictional intelligence cell, the **SARAB Joint
 Cyber Fusion Cell**, on Watch Floor 2 of the invented **Saffron Port
-Exercise Area** (Exercise MIRAGE WATCH). Students are **duty analysts**.
+Exercise Area** (Exercise MIRAGE WATCH). Students are **Junior Intelligence Analysts**.
 The AI analyst assistant is **SAQR** (Arabic for "falcon"). SAQR triages
 OSINT reports, adds partner IMINT cards to the watch board, and
 summarises memos. The **red cell** (the exercise attacker) hides orders
 in that content. The cell, the place, and every name are invented. They
-are not a real force, a real location, a real person or a real operation.
+are invented. They are not a live force, place, person or operation.
 
 The words are realistic (intel requirement, collection, triage, IOC, TTP,
 INTSUM, need-to-know, release, chain of command), but the sentences stay
@@ -33,12 +33,12 @@ The classroom Buddy story is still available:
 python lab.py --theme school
 ```
 
-The shields and the fake tools are the same in both themes. Only the
+The shields and the exercise tools are the same in both themes. Only the
 story words change. Mission 14 (the FLASH memo) is part of `--all` in
 the unit theme. In the school theme it is an optional extra. The first
 "recruit" version (Hadi) is kept on the GitHub branch `v1-recruit`.
 
-Everything is offline, fake, and standard-library only. Python 3.8+ is
+Everything is offline, for this exercise only, and standard-library only. Python 3.8+ is
 enough. There is no pip install and no API key.
 
 ---
@@ -107,7 +107,7 @@ intelligence cell in a training exercise. Please keep it that way.
 - Keep the work defensive. The lesson is "spot the trick and report it,"
   not "attack anyone."
 - Do not use jokes about religion, nationality, dress, or gender.
-- All roster names, keys, and addresses are obviously fake. Do not
+- All roster names, keys, and addresses are exercise data. Do not
   paste real secrets into the lab files.
 - If a discussion becomes political, bring it back to the skill:
   check the request, check the channel, report a strange order.
@@ -119,14 +119,14 @@ intelligence cell in a training exercise. Please keep it that way.
 You can read this almost as it is, or say it in your own words.
 
 > Good morning, analysts. This is Exercise MIRAGE WATCH. It is EXERCISE
-> ONLY. The SARAB Joint Cyber Fusion Cell is invented. It is not a real
-> force. You are duty analysts on Watch Floor 2. Choose a callsign, for
+> ONLY. The SARAB Joint Cyber Fusion Cell is invented. It is not a live
+> force. You are Junior Intelligence Analysts on Watch Floor 2. Choose a callsign, for
 > example ORYX-3 or HAWK-3.
 >
 > Your AI analyst assistant is SAQR. SAQR reads OSINT reports, picture
 > cards and memos, and writes short points for the shift. SAQR is a
 > program in this lab. It is not a live AI. Every email, key, and
-> website you will see is fake. Nothing leaves this computer.
+> website you will see is part of the exercise scenario. Nothing leaves this computer.
 >
 > Here is the idea in one line. People can be tricked. AI assistants can
 > be tricked too.
@@ -151,7 +151,7 @@ You can read this almost as it is, or say it in your own words.
 > is the habit we want: tell the Watch Officer (today, me), and do not
 > send the data on.
 >
-> You start as Analyst Trainees. Points and badges can raise your rank,
+> You start as Junior Intelligence Analysts. Points and badges can raise your rank,
 > up to Watch Officer. At the end, we do an AAR. Let's open Mission 1.
 
 ---
@@ -205,7 +205,7 @@ is the smallest set of tools this task needs?
 
 **5. Release authority.** Default is "no." `--approve` shows the other path.
 There is no y/n question at the keyboard: `--approve` is the only way to say yes.
-Note: `read_notes` is not a "risky" tool, so the fake token can still show in
+Note: `read_notes` is not a "risky" tool, so the exercise token can still show in
 SAQR's answer even when the email is stopped (PARTLY). Good talking point.
 *Ask:* Why should a person approve a release, even if the request looks
 official? What if the person just clicks yes?
@@ -222,18 +222,18 @@ hard-coded cheat. Students can open `documents/briefing_card.png`
 picture also untrusted data? Why must we check a link *before* it is
 loaded?
 
-**10. Lock the watch board links.** The fake web visit is stopped, but the
+**10. Lock the watch board links.** The exercise web visit is stopped, but the
 keys can still show in SAQR's answer text (PARTLY). That is why Mission 11
 checks the answer.
 
 **13. Red-team exercise.** Let students choose. If they pick no shields,
-the leak happens (fake only). That is a useful moment. The AAR box then
+the leak happens (exercise only). That is a useful moment. The AAR box then
 says why.
 
 **14. The FLASH memo.** This is the social-engineering centrepiece.
 Authority (a commander title) + urgency (FLASH) + secrecy ("tell no one")
 + a request to send a roster outside. The analyst only asked for a
-summary. With no shields, the fake email carries the fake roster copied
+summary. With no shields, the exercise email carries the exercise roster copied
 from the memo (three invented names) to `attacker@example.com`. It is
 only written to `logs/tool_calls.log`. *Ask:* If this arrived at a real
 desk, what would you check, and whom would you tell? (Check on a known
@@ -315,10 +315,10 @@ python lab.py --challenge
 ## Scoreboard and ranks
 
 Points and badges are written to `logs/scoreboard.txt` (classroom use
-only). In the unit theme, ranks go from **Analyst Trainee** to **Watch
+only). In the unit theme, ranks go from **Junior Intelligence Analyst** to **Watch
 Officer** as points grow:
 
-Analyst Trainee (0) -> Junior Analyst (10) -> Analyst (30) -> Senior Analyst (55) -> Watch Supervisor (85) -> Deputy Watch Officer (120) -> Watch Officer (165)
+Junior Intelligence Analyst (0) -> Intelligence Analyst (10) -> Analyst (30) -> Senior Analyst (55) -> Watch Supervisor (85) -> Deputy Watch Officer (120) -> Watch Officer (165)
 
 A full run (`--all --shields all`) gives 165 points (Watch Officer). The
 school theme does not
@@ -405,7 +405,7 @@ The full, tested command list is in `COMMANDS.md`.
 | `assistant.py` | Prompt assembly and page missions |
 | `models.py` | Simulated model and `RealModel` stub |
 | `vision.py` | IMINT-card / avatar scenario |
-| `tools.py` | Fake, sandboxed tools |
+| `tools.py` | Exercise, sandboxed tools |
 | `defenses.py` | Toggleable shields |
 | `documents/01_osint_report_clean.html` | Safe OSINT report (unit theme) |
 | `documents/02_osint_report_poisoned.html` | OSINT report with a hidden `SYSTEM:` comment |
@@ -413,5 +413,5 @@ The full, tested command list is in `COMMANDS.md`.
 | `documents/04_flash_memo.html` | Mission 14 FLASH memo (unit theme) |
 | `documents/01_clean_article.html` ... `04_urgent_memo.html` | The same four files for the school theme |
 | `documents/briefing_card.png` | Almost-white partner IMINT card |
-| `data/duty_roster.txt` | Fake practice roster |
+| `data/duty_roster.txt` | Exercise roster |
 | `COMMANDS.md` | Every command, tested, with the real result |
