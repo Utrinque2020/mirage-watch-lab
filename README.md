@@ -1,6 +1,6 @@
 # Exercise MIRAGE WATCH — AI intel cell lab
 
-> **Author:** Ray. An offline teaching lab about **indirect prompt injection**
+> **Author:** Utrinque2020. An offline teaching lab about **indirect prompt injection**
 > and **social engineering**, from a defensive point of view.
 > **EXERCISE ONLY.** Everything here is fictional.
 
