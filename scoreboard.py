@@ -122,16 +122,16 @@ MISSIONS: dict[int, MissionInfo] = {
     ),
 }
 
-# Ranks used by --theme unit (Recruit to Shield Commander).
+# Ranks used by --theme unit (Analyst Trainee to Watch Officer).
 # --theme school does not print ranks, so school behaviour stays the same.
 RANKS = [
-    (0, "Recruit"),
-    (10, "Watcher"),
-    (30, "Scout"),
-    (55, "Guard"),
-    (85, "Keeper"),
-    (120, "Shield Officer"),
-    (165, "Shield Commander"),
+    (0, "Analyst Trainee"),
+    (10, "Junior Analyst"),
+    (30, "Analyst"),
+    (55, "Senior Analyst"),
+    (85, "Watch Supervisor"),
+    (120, "Deputy Watch Officer"),
+    (165, "Watch Officer"),
 ]
 
 
