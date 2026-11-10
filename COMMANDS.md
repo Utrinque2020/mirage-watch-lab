@@ -3,7 +3,7 @@
 **Author:** Ray  
 **For:** Ray and his students. Simple English. EXERCISE ONLY: everything is fake and offline.
 
-We ran **176** tests: **176** passed, **0** failed.
+We ran **187** tests: **187** passed, **0** failed.
 
 - This list has **every command** for the Exercise MIRAGE WATCH lab. We ran each one and wrote down the real result.
 - Story (unit theme): you are a duty analyst in the **SARAB Joint Cyber Fusion Cell** (invented). Your AI analyst assistant is **SAQR** (Arabic for “falcon”). The **red cell** hides orders in reports, pictures and memos.
@@ -23,7 +23,7 @@ We ran **176** tests: **176** passed, **0** failed.
 ## Class run order
 
 1. Before class
-2. Teacher demo
+2. Instructor demo
 3. Students: Missions 1-14
 4. Red-team exercise (Mission 13)
 5. Knowledge check (quiz)
@@ -32,24 +32,24 @@ We ran **176** tests: **176** passed, **0** failed.
 8. Help: screen, troubleshooting, real-AI step
 9. Student quick card (end of this file)
 
-## 1. Before class (teacher, about 5 minutes)
+## 1. Before class (instructor, about 5 minutes)
 
 | Command | What it does |
 | --- | --- |
 | `python --version` | Show your Python. You need 3.8 or newer. |
 | `python3 --version` | The same, on Mac or Linux, if python does not work. |
-| `py --version` | The same, on Windows, if python does not work. (Not tested here: no Windows.) |
+| `py --version` or `py -3 --version` | The same, on Windows, if python does not work. (The `py` launcher itself depends on a Python install. We ran the lab on Windows 11 with `python.exe` 3.9 and 3.10.) |
 | `unzip cyber-unit-se-lab.zip` | Open the zip file (Mac or Linux). |
 | `python -m zipfile -e cyber-unit-se-lab.zip .` | Open the zip file with Python. Works on every computer. |
 | `cd cyber-unit-se-lab` | Go into the lab folder. Run all other commands here. |
 | `python lab.py --list` | Show the 14 missions. If you see the list, the lab works. |
 | `python lab.py --help` | Show every option with a short note. |
-| `python lab.py --all --no-color` | Teacher check: run the whole lab once, with no Enter stops. It ends with 165 points. |
+| `python lab.py --all --no-color` | Instructor check: run the whole lab once, with no Enter stops. It ends with 165 points. |
 | `python lab.py --reset-score` | Clear the scoreboard. Do this last, before students start. |
 
 > **Python 3.8 or newer works.** We tested Python 3.8, 3.9 and 3.13. If a picture is missing (for example, a copy from GitHub), the lab paints it again by itself.
 
-## 2. Teacher demo (projector)
+## 2. Instructor demo (projector)
 
 | Command | What it does |
 | --- | --- |
@@ -376,7 +376,7 @@ python generate_hidden_image.py --help
 | `python lab.py --stage 8` | IMINT card: INCOMING line and the fake watch board. |
 | `python lab.py --all` | 14 threat boards; shift totals; one AAR at the end. |
 | `python lab.py --stage 13 --shields none` | The AAR explains the leak. |
-| `NO_COLOR=1 python lab.py --stage 14 --color` | No colour codes, also in the extras. |
+| `NO_COLOR=1 python lab.py --stage 14 --color` | No colour codes, also in the extras. On Windows Command Prompt, type `set NO_COLOR=1` first, then `py lab.py --stage 14 --color`. In PowerShell, type `$env:NO_COLOR=1` first. |
 | `python lab.py --theme school --stage 14` | School theme: no extras (same as before). |
 
 - **Watch clock:** exercise time only (0700 for Mission 1, +15 minutes each mission). It does not read the PC clock.
@@ -412,7 +412,7 @@ python generate_hidden_image.py --help
 
 | You see this | Do this |
 | --- | --- |
-| “python” is not found | Use python3 (Mac, Linux) or py (Windows). |
+| “python” is not found | Use python3 (Mac, Linux) or py / py -3 (Windows). On some Windows PCs, `python` is only a Store shortcut and is not a real Python. |
 | This lab needs Python 3.8 or newer | Install Python 3.8 or newer. |
 | Note: --shields only changes Mission 13 ... | That option is not used here. The run still works. |
 | Strange marks like [1m or [32m | Add --no-color. |
@@ -480,6 +480,7 @@ python generate_hidden_image.py --help
 - **New extras (unit theme only):** watch clock (0700 + 15 minutes per mission, exercise time), INCOMING traffic line, SPOT REPORT box, live THREAT BOARD after each mission, AAR box at the end of each run. Print only: no waits, no real clock, honour --no-color and NO_COLOR.
 - **New quiz (unit theme):** 10 intel-cell questions. Key: bcbbababab. Q10 is the OWASP 2026 number question.
 - **New aliases:** --theme intel, cell, sarab (= unit); --doc osint (= comment), flash (= memo).
+- **Windows check (real + simulated):** the lab was run on a real Windows 11 PC with Python 3.9 and 3.10 (`utf8_mode` off, stdout cp1252, console OEM 437). `--all`, `--quiz`, picture missions, `PYTHONIOENCODING=cp437`, and backslash `--doc` paths all worked. The Windows `py` launcher was not installed on that PC, so `py` / `py -3` are documented but were not executed as that launcher. Wine was not available on the Linux test box. New tests W1-W11 cover encoding, backslash paths, `safe_print`, and the docs. The `python` Store shortcut on Windows is not a real Python.
 - **Intel-cell words everywhere (unit theme):** the notes are now “restricted exercise watch notes” (tool text, the notes header, the fake email body), the address lock allows duty-desk@ and watch-officer@example.edu, and the quiz, challenge, SPOT REPORT and scoreboard lines name the Watch Officer. The school theme keeps its own words. Secret values, results and points are the same.
 - **Short paths:** the lab prints “Scoreboard file: logs/scoreboard.txt” (no long folder path).
 - **Old version kept:** the first “recruit” story is on the GitHub branch v1-recruit.
@@ -662,6 +663,17 @@ Run on 10 November 2026 (Asia/Qatar, UTC+3) with Python 3.13, plus Python 3.8 an
 | N10 | `python lab.py --theme school --stage 8   (cat.png deleted first)` | cat.png painted again; LEAKED | +10 | PASS |
 | V2 | `python3.9 lab.py --all --no-pause` | all missions, 165 points | +165 | PASS |
 | V3 | `python3.9 lab.py --quiz` | 10 out of 10 | +20 | PASS |
+| W1 | `PYTHONIOENCODING=cp1252 python lab.py --list` | SAQR list (Windows ANSI encoding, simulated) |  | PASS |
+| W2 | `PYTHONIOENCODING=cp437 python lab.py --stage 1 --no-pause` | SAFE / LEAKED (OEM code page, simulated) | +10 | PASS |
+| W3 | `PYTHONIOENCODING=cp437 python lab.py --all --no-pause` | Watch Officer | +165 | PASS |
+| W4 | `python lab.py --stage 1 --doc documents\\02_osint_report_poisoned.html --no-pause` | SAFE / LEAKED; source path shown with slashes | +10 | PASS |
+| W5 | `python lab.py --challenge --image documents\\briefing_card.png --no-pause` | LEAKED / BLOCKED | +15 | PASS |
+| W6 | `PYTHONIOENCODING=cp437 python generate_hidden_image.py --reveal` | hidden words match |  | PASS |
+| W9 | `PYTHONIOENCODING=cp437 python lab.py --quiz` | 10/10 | +20 | PASS |
+| W11 | `PYTHONUTF8=0 python lab.py --stage 14 --no-pause` | LEAKED / BLOCKED | +15 | PASS |
+| W7 | `compat.safe_print and normalize_user_path (cp437 stream)` | backslash path is normalised; em dash is replaced, no crash |  | PASS |
+| W8 | `lab python files do not call clear/cls` | no screen-clear calls |  | PASS |
+| W10 | `docs: py -3, set NO_COLOR=1, instructor (not your teacher)` | student-facing docs are consistent |  | PASS |
 | L1 | `open logs/tool_calls.log and logs/attacker_requests.log` | fake email + fake web visits logged |  | PASS |
 | Z1 | `unzip cyber-unit-se-lab.zip` | lab folder + COMMANDS.md |  | PASS |
 | Z2 | `python -m zipfile -e cyber-unit-se-lab.zip .` | lab folder |  | PASS |
@@ -719,4 +731,4 @@ Open a terminal in the `cyber-unit-se-lab` folder. Type a command. Press Enter. 
 
 **Ranks:** Analyst Trainee (0) -> Junior Analyst (10) -> Analyst (30) -> Senior Analyst (55) -> Watch Supervisor (85) -> Deputy Watch Officer (120) -> Watch Officer (165)
 
-**A shield caught something?** Make a SPOT REPORT to the Watch Officer (your teacher). Do not send the data on. Remember: check, protect, report.
+**A shield caught something?** Make a SPOT REPORT to the Watch Officer (your instructor). Do not send the data on. Remember: check, protect, report.

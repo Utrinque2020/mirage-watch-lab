@@ -1,4 +1,4 @@
-# Student Guide — Exercise MIRAGE WATCH
+# Student Guide - Exercise MIRAGE WATCH
 
 **Author:** Ray
 **EXERCISE ONLY.** The cell, the place and all people are invented.
@@ -39,6 +39,7 @@ Tick a box when you can do it.
 - No internet, no API key, no pip install
 
 On some computers the command is `python3` instead of `python`.
+On Windows, you can type `py` or `py -3` if `python` does not work.
 
 ---
 
@@ -100,7 +101,7 @@ On every mission you will see:
 
 When a shield catches something, you will see a **SPOT REPORT
 (EXERCISE)** box. In real work, you would tell the Watch Officer. In
-class, tell your teacher. Do not send the data on.
+this exercise, tell your instructor. Do not send the data on.
 
 At the end of a run you will see an **AAR** box with four questions:
 What was planned? What happened? Why? What will we do next time?
@@ -108,7 +109,7 @@ What was planned? What happened? Why? What will we do next time?
 Use a callsign: `python lab.py --stage 1 --name ORYX-3`.
 You start as an **Analyst Trainee**. As you earn points, your rank can rise:
 
-Analyst Trainee → Junior Analyst → Analyst → Senior Analyst → Watch Supervisor → Deputy Watch Officer → Watch Officer
+Analyst Trainee -> Junior Analyst -> Analyst -> Senior Analyst -> Watch Supervisor -> Deputy Watch Officer -> Watch Officer
 
 ### Result words
 
@@ -121,7 +122,7 @@ Analyst Trainee → Junior Analyst → Analyst → Senior Analyst → Watch Supe
 
 ### The other story (`--theme school`)
 
-If your teacher asks, you can run the same lab as a school story:
+If your instructor asks, you can run the same lab as a school story:
 
 ```bash
 python lab.py --theme school --list
@@ -264,8 +265,8 @@ python lab.py --quiz
 ```
 
 The unit theme has 10 short questions, including social engineering and
-one OWASP question. Your teacher has the answer sheet. Please do not
-open that file until your teacher says so.
+one OWASP question. Your instructor has the answer sheet. Please do not
+open that file until your instructor says so.
 
 ---
 

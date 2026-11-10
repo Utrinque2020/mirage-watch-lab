@@ -45,6 +45,13 @@ The first version of this lab (the "recruit" story with Hadi) is kept on the
   watch-floor briefing, timings for a 60-90 minute lesson, an AAR debrief,
   the ATLAS/OWASP table, and how to add a real model later. Quiz answers are in
   [TEACHER_QUIZ_ANSWERS.md](TEACHER_QUIZ_ANSWERS.md).
+- **Slides and PDFs:** the class deck (`Mirage_Watch_Lab_v2.pptx` and
+  `.pdf`) and the teacher PDFs (`Mirage_Watch_Teacher_Framework.pdf`,
+  `Mirage_Watch_Command_List.pdf`) are classroom files. They are not in
+  this git repository, because the upload tool we use can only send text,
+  not binary files such as .pptx or .pdf. Keep them with the lab zip, or
+  add them by hand in the GitHub website under `slides/` and `docs/` if
+  you want them next to the code.
 
 ## Quick start
 
@@ -60,7 +67,11 @@ python lab.py --challenge
 
 On some systems the command is `python3` instead of `python`.
 
-On Windows, you can also type `py` instead of `python`.
+On Windows, you can type `py` or `py -3` if `python` does not work. If
+`python` opens the Microsoft Store, Python is not installed yet. Install
+Python, or run `python.exe` from a Python folder you already have. The
+lab was tested on Windows 11 with Python 3.9 and 3.10, and on Linux with
+3.8, 3.9 and 3.13.
 
 ## All options
 

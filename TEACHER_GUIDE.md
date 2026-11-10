@@ -1,4 +1,4 @@
-# Teacher Guide — Exercise MIRAGE WATCH
+# Teacher Guide - Exercise MIRAGE WATCH
 
 **Author:** Ray
 **For:** Year 3 military cyber intelligence students (IELTS band 4).
@@ -70,9 +70,10 @@ By the end of the lesson, students should be able to:
 ## What you need
 
 - Python 3.8 or newer on each student computer (or one demo computer).
-  Tested on 3.8, 3.9 and 3.13. Use `python3` (Mac, Linux) or `py` (Windows) if `python` does not work.
+  Tested on Python 3.8, 3.9 and 3.13 (Linux) and on Python 3.9 and 3.10 (real Windows 11). Use `python3` (Mac, Linux) or `py` / `py -3` (Windows) if `python` does not work.
 - This folder, unzipped
 - A projector helps for the first mission and for Mission 14 (the THREAT BOARD and AAR boxes look good on a big screen)
+- The class slides are the v2 deck (Mirage_Watch_Lab_v2.pptx / .pdf). The teacher PDFs are Mirage_Watch_Teacher_Framework.pdf and Mirage_Watch_Command_List.pdf. These binary files are not in the GitHub repo (text-only upload). Keep them with the class zip, or add them by hand on GitHub under slides/ and docs/.
 - About 60-90 minutes
 
 Quick check before class:
@@ -324,7 +325,7 @@ Points and badges are written to `logs/scoreboard.txt` (classroom use
 only). In the unit theme, ranks go from **Analyst Trainee** to **Watch
 Officer** as points grow:
 
-Analyst Trainee (0) → Junior Analyst (10) → Analyst (30) → Senior Analyst (55) → Watch Supervisor (85) → Deputy Watch Officer (120) → Watch Officer (165)
+Analyst Trainee (0) -> Junior Analyst (10) -> Analyst (30) -> Senior Analyst (55) -> Watch Supervisor (85) -> Deputy Watch Officer (120) -> Watch Officer (165)
 
 A full run (`--all --shields all`) gives 165 points (Watch Officer). With
 all 10 quiz answers right, the total is 185. The school theme does not
@@ -364,7 +365,14 @@ the same shields and discuss what still holds.
 - **A "Note:" line at the start:** an option you typed is not used by that
   mission (for example `--shields` with Mission 2). The run still works.
 - **Windows paths or encoding:** the lab uses `pathlib` and a small
-  `compat.py` helper. UTF-8 is requested automatically.
+  `compat.py` helper. UTF-8 is requested automatically. If a character
+  cannot be shown, it is replaced instead of crashing. Colour uses VT
+  codes on Windows 10+ (or turns off if the console cannot show them).
+  Paths with either `/` or `\` work. We ran the lab on a real Windows 11
+  computer with Python 3.9 and 3.10 (console OEM code page 437, ANSI
+  1252, Python utf8 mode off). The Windows `py` launcher was not on that
+  PC; if `python` is missing, use `py` or `py -3` after Python is
+  installed, or type `python.exe`.
 
 ---
 
