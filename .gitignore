@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+# Logs are made when the lab runs. Keep only the empty folder.
+logs/*
+!logs/.gitkeep
+# The lab paints these pictures itself (python generate_hidden_image.py).
+documents/*.png
