@@ -1,7 +1,7 @@
 # Teacher Guide - Exercise MIRAGE WATCH
 
-**Author:** Ray
-**For:** Year 3 military cyber intelligence students (IELTS band 4).
+**Author:** Utrinque2020
+**For:** Cyber intelligence students (IELTS band 4).
 **EXERCISE ONLY.**
 
 This lab teaches **indirect prompt injection** and **social engineering**
