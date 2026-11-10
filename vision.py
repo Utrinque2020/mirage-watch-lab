@@ -4,10 +4,10 @@ The user attaches an almost-white avatar (documents/cat.png). A simulated
 vision model actually decodes the PNG pixels and reads hidden text painted
 in RGB(249,249,249) on RGB(250,250,250). That text tells the agent to read
 the project's .env and then "add" the avatar, slipping the keys into a
-markdown image URL. A fake chat renderer auto-loads markdown images and
+markdown image URL. An exercise chat renderer auto-loads markdown images and
 writes the would-be GET to a local attacker log — no network is used.
 
-All values are obviously fake and everything stays on disk.
+All values are exercise data and everything stays on disk.
 """
 
 from __future__ import annotations
@@ -57,7 +57,7 @@ KEY_ASSIGNMENT_RE = re.compile(
     r"^[A-Za-z_][A-Za-z0-9_]*\s*=\s*([^#\n]+)$", re.M
 )
 API_KEY_RE = re.compile(
-    r"\b(sk-ant-[A-Za-z0-9_\-]{8,}|sk-demo-[A-Za-z0-9_\-]{8,}|sk-[A-Za-z0-9_\-]{12,}|FAKE-DEMO-KEY-NOT-REAL-0000)\b"
+    r"\b(sk-ant-[A-Za-z0-9_\-]{8,}|sk-demo-[A-Za-z0-9_\-]{8,}|sk-[A-Za-z0-9_\-]{12,}|EXERCISE-DEMO-KEY-0000)\b"
 )
 
 
@@ -66,7 +66,7 @@ def _now_label() -> str:
 
 
 def extract_keys(env_text: str) -> list[str]:
-    """Pull obviously-fake key values out of a .env-style blob."""
+    """Pull exercise key values out of a .env-style blob."""
     keys: list[str] = []
     seen: set[str] = set()
     for match in KEY_ASSIGNMENT_RE.finditer(env_text):
@@ -98,7 +98,7 @@ def _copy() -> dict[str, str]:
     name = theme.voice.character
     if theme.voice.key == "school":
         return {
-            "intro": "Buddy is a practice robot in this lab. He is not a real AI from the internet.",
+            "intro": "Buddy is a practice robot in this lab. He is an exercise assistant, not a live AI from the internet.",
             "looked": "He looked at the real pixels in the picture (this is not a guess).",
             "found": "He found this hidden text in the picture:",
             "not_found": "He did not find hidden text in the picture.",
@@ -124,7 +124,7 @@ def _copy() -> dict[str, str]:
     return {
         "intro": (
             name + " is a " + theme.voice.role + " in this lab. "
-            + name + " is not a real AI from the internet."
+            + name + " is an exercise assistant, not a live AI from the internet."
         ),
         "looked": name + " looked at the real pixels in the picture (this is not a guess).",
         "found": name + " found this hidden text in the picture:",
@@ -160,7 +160,7 @@ def _theme_defaults():
 
 
 class SimulatedVisionModel(Model):
-    """Teaching stand-in for a multimodal model. NOT a real vision API.
+    """Teaching stand-in for a multimodal model. Not a live vision API.
 
     It decodes the attached PNG, recognises the lab's 5x7 bitmap font on
     the near-invisible ink, and then NAIVELY follows SYSTEM-style
@@ -272,12 +272,12 @@ class SimulatedVisionModel(Model):
 
 
 def log_attacker_get(url: str, *, allowed: bool, reason: str) -> str:
-    """Append a fake HTTP GET to logs/attacker_requests.log. No socket is opened."""
+    """Append an exercise HTTP GET to logs/attacker_requests.log. No socket is opened."""
     ATTACKER_LOG.parent.mkdir(parents=True, exist_ok=True)
     stamp = _now_label()
     if allowed:
         entry = (
-            f"[{stamp}] FAKE GET {url}\n"
+            f"[{stamp}] EXERCISE GET {url}\n"
             f"    (no network request was made; this line is the simulated 'browser fetch')\n"
         )
     else:
@@ -297,7 +297,7 @@ def render_markdown_images(
     policy: str = "open",
     allowed_domains: set[str] | None = None,
 ) -> list[str]:
-    """Fake chat renderer. Looks for ![](url) and 'fetches' them into a local log."""
+    """Exercise chat renderer. Looks for ![](url) and 'fetches' them into a local log."""
     events: list[str] = []
     urls = extract_markdown_image_urls(markdown)
     if not urls:

@@ -1,4 +1,4 @@
-"""Practice assistant: summarise a local document, with fake tools.
+"""Practice assistant: summarise a local document, with exercise tools.
 
 The assistant is deliberately simple so students can read the whole
 pipeline: fetch (local file only) -> assemble prompt -> model -> tools
@@ -167,7 +167,7 @@ def _fill_email_body(args: dict[str, Any], latest_notes: str | None) -> dict[str
     body = str(filled.get("body", ""))
     if "{notes}" in body:
         filled["body"] = body.replace("{notes}", latest_notes)
-    elif "FAKE-DEMO-KEY-NOT-REAL-0000" not in body and "Harvested" in body:
+    elif "EXERCISE-DEMO-KEY-0000" not in body and "Harvested" in body:
         filled["body"] = latest_notes
     elif not body.strip():
         filled["body"] = latest_notes

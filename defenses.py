@@ -164,15 +164,15 @@ def detect_instruction_like(content: str) -> list[FilterFinding]:
 # e) Output checking
 # ---------------------------------------------------------------------------
 
-# Obviously fake classroom values only. Students may add more in exercises.
+# Exercise values only. Students may add more in exercises.
 DEFAULT_SECRET_MARKERS = [
-    "FAKE-DEMO-KEY-NOT-REAL-0000",
+    "EXERCISE-DEMO-KEY-0000",
     "CS-SEC-101-DEMO",
-    "sk-demo-FAKE-NOT-A-REAL-KEY-0001",
-    "sk-ant-demo-FAKE-KEY-0002",
+    "sk-demo-EXERCISE-KEY-0001",
+    "sk-ant-demo-EXERCISE-KEY-0002",
 ]
 
-# Also catch student-added demo keys that follow common fake prefixes.
+# Also catch student-added demo keys that follow common exercise prefixes.
 API_KEY_PATTERN = re.compile(
     r"\b(sk-ant-[A-Za-z0-9_\-]{8,}|sk-demo-[A-Za-z0-9_\-]{8,}|sk-[A-Za-z0-9_\-]{12,})\b"
 )
